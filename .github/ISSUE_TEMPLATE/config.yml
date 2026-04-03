@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/lgtm-hq/.github/blob/main/SECURITY.md
+    about: >-
+      Do not open a public issue for security vulnerabilities.
+      Use GitHub's private vulnerability reporting instead.
+  - name: Support
+    url: https://github.com/lgtm-hq/.github/blob/main/SUPPORT.md
+    about: >-
+      Find out where and how to get help with LGTM HQ projects.
