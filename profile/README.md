@@ -1,4 +1,4 @@
-<!-- markdownlint-disable MD033 MD013 -->
+<!-- markdownlint-disable MD033 MD013 MD041 -->
 
 <div align="center">
 
@@ -9,8 +9,8 @@
 *Open-source tools for linting, theming, CI/CD, and developer environments — designed to reduce friction and raise the bar for code quality.*
 
 [![Org — lgtm-hq](https://img.shields.io/badge/org-lgtm--hq-181717?logo=github)](https://github.com/lgtm-hq)
-[![Location — Netherlands](https://img.shields.io/badge/location-Netherlands-blue)](#)
-[![License — MIT](https://img.shields.io/badge/license-MIT-green)](#)
+![Location — Netherlands](https://img.shields.io/badge/location-Netherlands-blue)
+![License — MIT](https://img.shields.io/badge/license-MIT-green)
 
 </div>
 

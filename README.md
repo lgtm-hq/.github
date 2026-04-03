@@ -1,4 +1,4 @@
-<!-- markdownlint-disable MD033 MD013 -->
+<!-- markdownlint-disable MD033 MD013 MD041 -->
 
 <div align="center">
 
