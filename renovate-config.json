@@ -1,0 +1,45 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "platformCommit": true,
+  "assigneesFromCodeOwners": true,
+  "reviewersFromCodeOwners": false,
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 5,
+  "dependencyDashboard": true,
+  "dependencyDashboardTitle": "Dependency Dashboard",
+  "schedule": ["after 22:00", "before 23:00"],
+  "timezone": "UTC",
+  "labels": ["dependencies"],
+  "rangeStrategy": "pin",
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "commitMessagePrefix": "chore(deps):",
+  "prTitle": "{{semanticCommitType}}({{semanticCommitScope}}): {{#if isMajor}}update {{depName}} to {{newVersion}} (major){{else if isMinor}}update {{depName}} to {{newVersion}} (minor){{else}}{{#if newVersion}}update {{depName}} to {{newVersion}}{{else}}update {{depName}} digest{{/if}}{{/if}}",
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "pinDigests": true,
+      "automerge": true,
+      "automergeType": "branch",
+      "groupName": "github-actions",
+      "separateMinorPatch": false
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "automergeType": "branch"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "groupName": "all major dependencies",
+      "groupSlug": "all-major",
+      "matchPackageNames": ["**"]
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true
+  }
+}
