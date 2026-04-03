@@ -11,7 +11,7 @@
   "schedule": ["after 22:00", "before 23:00"],
   "timezone": "UTC",
   "labels": ["dependencies"],
-  "rangeStrategy": "pin",
+  "rangeStrategy": "replace",
   "semanticCommits": "enabled",
   "semanticCommitType": "chore",
   "semanticCommitScope": "deps",
@@ -36,6 +36,11 @@
       "groupName": "all major dependencies",
       "groupSlug": "all-major",
       "matchPackageNames": ["**"]
+    },
+    {
+      "matchDepTypes": ["requires-python"],
+      "matchManagers": ["pep621"],
+      "enabled": false
     }
   ],
   "lockFileMaintenance": {
