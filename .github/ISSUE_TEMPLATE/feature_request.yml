@@ -1,0 +1,72 @@
+---
+name: Feature request
+description: Suggest an idea or enhancement
+labels: [enhancement, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We appreciate your ideas for improving our projects. Please provide enough detail
+        for us to understand and evaluate your proposal.
+
+  - type: input
+    id: summary
+    attributes:
+      label: Feature summary
+      description: A clear, one-line description of the feature
+      placeholder: "Example: Add JSON output format to CLI"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What problem does this feature address? Why is it needed?
+      placeholder: |
+        Example: There is currently no way to consume CLI output programmatically,
+        which makes it difficult to integrate into automation pipelines.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like this feature to work? Include usage examples if helpful.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Have you considered any alternative solutions or workarounds?
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Nice to have
+        - Would be helpful
+        - Very important
+        - Critical for my use case
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I would be willing to help implement this feature
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and feature requests
+          required: true
+        - label: This feature would benefit the broader community
+          required: true
