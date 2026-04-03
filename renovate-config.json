@@ -38,7 +38,7 @@
       "matchPackageNames": ["**"]
     },
     {
-      "matchDepNames": ["python"],
+      "matchDepTypes": ["requires-python"],
       "matchManagers": ["pep621"],
       "enabled": false
     }
