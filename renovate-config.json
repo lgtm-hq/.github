@@ -27,15 +27,185 @@
       "separateMinorPatch": false
     },
     {
-      "matchUpdateTypes": ["patch"],
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps-dev",
+      "commitMessagePrefix": "chore(deps-dev):"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "fix(deps):"
+    },
+    {
+      "matchManagers": ["pep621", "uv"],
+      "matchDepTypes": ["dependency-groups"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps-dev",
+      "commitMessagePrefix": "chore(deps-dev):"
+    },
+    {
+      "matchManagers": ["pep621", "uv"],
+      "matchDepTypes": ["project.dependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "fix(deps):"
+    },
+    {
+      "matchManagers": ["poetry"],
+      "matchDepTypes": ["dev-dependencies", "dev"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps-dev",
+      "commitMessagePrefix": "chore(deps-dev):"
+    },
+    {
+      "matchManagers": ["poetry"],
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "fix(deps):"
+    },
+    {
+      "matchManagers": ["cargo"],
+      "matchDepTypes": ["dev-dependencies"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps-dev",
+      "commitMessagePrefix": "chore(deps-dev):"
+    },
+    {
+      "matchManagers": ["cargo"],
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "fix(deps):"
+    },
+    {
+      "matchManagers": ["pipenv"],
+      "matchDepTypes": ["dev-packages"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps-dev",
+      "commitMessagePrefix": "chore(deps-dev):"
+    },
+    {
+      "matchManagers": ["pipenv"],
+      "matchDepTypes": ["packages"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "fix(deps):"
+    },
+    {
+      "matchManagers": ["pip_setup", "setup-cfg"],
+      "matchDepTypes": [
+        "tests_require",
+        "setup_requires",
+        "extras_require:dev",
+        "extras_require:test",
+        "extras_require:testing",
+        "extras_require:lint"
+      ],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps-dev",
+      "commitMessagePrefix": "chore(deps-dev):"
+    },
+    {
+      "matchManagers": ["pip_setup", "setup-cfg"],
+      "matchDepTypes": ["install_requires"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "fix(deps):"
+    },
+    {
+      "matchManagers": ["pip_requirements"],
+      "matchFileNames": ["**/requirements*.txt"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "fix(deps):"
+    },
+    {
+      "matchManagers": ["pip_requirements"],
+      "matchFileNames": [
+        "**/requirements-dev*.txt",
+        "**/dev-requirements*.txt",
+        "**/requirements-test*.txt",
+        "**/test-requirements*.txt",
+        "**/requirements/dev*.txt",
+        "**/requirements/test*.txt"
+      ],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps-dev",
+      "commitMessagePrefix": "chore(deps-dev):"
+    },
+    {
+      "matchUpdateTypes": ["digest"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "chore(deps):"
+    },
+    {
+      "matchUpdateTypes": ["patch", "digest"],
       "automerge": true,
       "automergeType": "branch"
     },
     {
       "matchUpdateTypes": ["major"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "chore(deps):",
       "groupName": "all major dependencies",
       "groupSlug": "all-major",
       "matchPackageNames": ["**"]
+    },
+    {
+      "groupName": "linting-tools",
+      "matchPackageNames": [
+        "prettier",
+        "markdownlint-cli2",
+        "markdownlint",
+        "oxlint",
+        "eslint",
+        "@eslint/**",
+        "eslint-**",
+        "stylelint",
+        "stylelint-**",
+        "ruff",
+        "black",
+        "mypy",
+        "pylint",
+        "flake8",
+        "isort",
+        "shellcheck",
+        "shfmt",
+        "hadolint",
+        "yamllint"
+      ]
+    },
+    {
+      "groupName": "test-tools",
+      "matchPackageNames": [
+        "pytest",
+        "pytest-**",
+        "vitest",
+        "@vitest/**",
+        "jest",
+        "@jest/**",
+        "jest-**",
+        "playwright",
+        "@playwright/**",
+        "mocha",
+        "chai",
+        "bats",
+        "bats-**"
+      ]
     },
     {
       "matchDepTypes": ["requires-python"],
@@ -45,6 +215,9 @@
   ],
   "lockFileMaintenance": {
     "enabled": true,
-    "automerge": true
+    "automerge": true,
+    "semanticCommitType": "chore",
+    "semanticCommitScope": "deps",
+    "commitMessagePrefix": "chore(deps):"
   }
 }
