@@ -81,7 +81,7 @@
     },
     {
       "matchManagers": ["cargo"],
-      "matchDepTypes": ["dev-dependencies"],
+      "matchDepTypes": ["dev-dependencies", "build-dependencies"],
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps-dev",
       "commitMessagePrefix": "chore(deps-dev):"
