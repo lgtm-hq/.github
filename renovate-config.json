@@ -39,7 +39,11 @@
     },
     {
       "matchManagers": ["npm"],
-      "matchDepTypes": ["dependencies"],
+      "matchDepTypes": [
+        "dependencies",
+        "optionalDependencies",
+        "peerDependencies"
+      ],
       "matchUpdateTypes": ["minor", "patch"],
       "semanticCommitType": "fix",
       "semanticCommitScope": "deps",
@@ -58,7 +62,10 @@
     },
     {
       "matchManagers": ["pep621", "uv"],
-      "matchDepTypes": ["project.dependencies"],
+      "matchDepTypes": [
+        "project.dependencies",
+        "project.optional-dependencies"
+      ],
       "matchUpdateTypes": ["minor", "patch"],
       "semanticCommitType": "fix",
       "semanticCommitScope": "deps",
@@ -73,7 +80,12 @@
     },
     {
       "matchManagers": ["poetry"],
-      "matchDepTypes": ["dependencies"],
+      "matchDepTypes": [
+        "dependencies",
+        "extras",
+        "project.dependencies",
+        "project.optional-dependencies"
+      ],
       "matchUpdateTypes": ["minor", "patch"],
       "semanticCommitType": "fix",
       "semanticCommitScope": "deps",
