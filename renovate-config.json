@@ -21,10 +21,14 @@
     {
       "matchManagers": ["github-actions"],
       "pinDigests": true,
-      "automerge": true,
-      "automergeType": "branch",
       "groupName": "github-actions",
       "separateMinorPatch": false
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["patch", "digest"],
+      "automerge": true,
+      "automergeType": "branch"
     },
     {
       "matchManagers": ["npm"],
@@ -43,7 +47,11 @@
     },
     {
       "matchManagers": ["pep621", "uv"],
-      "matchDepTypes": ["dependency-groups"],
+      "matchDepTypes": [
+        "dependency-groups",
+        "tool.uv.dev-dependencies",
+        "tool.pdm.dev-dependencies"
+      ],
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps-dev",
       "commitMessagePrefix": "chore(deps-dev):"
@@ -157,15 +165,6 @@
       "automergeType": "branch"
     },
     {
-      "matchUpdateTypes": ["major"],
-      "semanticCommitType": "chore",
-      "semanticCommitScope": "deps",
-      "commitMessagePrefix": "chore(deps):",
-      "groupName": "all major dependencies",
-      "groupSlug": "all-major",
-      "matchPackageNames": ["**"]
-    },
-    {
       "groupName": "linting-tools",
       "matchPackageNames": [
         "prettier",
@@ -206,6 +205,15 @@
         "bats",
         "bats-**"
       ]
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps",
+      "commitMessagePrefix": "chore(deps):",
+      "groupName": "all major dependencies",
+      "groupSlug": "all-major",
+      "matchPackageNames": ["**"]
     },
     {
       "matchDepTypes": ["requires-python"],
