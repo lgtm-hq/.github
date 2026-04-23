@@ -165,30 +165,6 @@
       "automergeType": "branch"
     },
     {
-      "groupName": "linting-tools",
-      "matchPackageNames": [
-        "prettier",
-        "markdownlint-cli2",
-        "markdownlint",
-        "oxlint",
-        "eslint",
-        "@eslint/**",
-        "eslint-**",
-        "stylelint",
-        "stylelint-**",
-        "ruff",
-        "black",
-        "mypy",
-        "pylint",
-        "flake8",
-        "isort",
-        "shellcheck",
-        "shfmt",
-        "hadolint",
-        "yamllint"
-      ]
-    },
-    {
       "groupName": "test-tools",
       "matchPackageNames": [
         "pytest",
