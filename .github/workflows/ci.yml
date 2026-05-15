@@ -23,9 +23,5 @@ jobs:
 
       - name: Validate Renovate config JSON
         shell: bash
-        run: |
-          set -euo pipefail
-          jq empty renovate-config.json
-          jq -e '.extends | index("config:recommended") != null' renovate-config.json
-          jq -e '.packageRules | length > 0' renovate-config.json
+        run: bash scripts/ci/validate-renovate-config.sh
 
