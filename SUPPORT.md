@@ -43,9 +43,9 @@ To help us help you quickly, please provide:
 
 ## Response Times
 
-LGTM HQ projects are maintained by volunteers. We do our best to respond promptly, but
-please allow a few business days for a reply. Critical security issues are prioritized --
-see [SECURITY.md](SECURITY.md) for expected timelines.
+LGTM HQ projects are maintained by volunteers. We do our best to respond
+promptly, but please allow a few business days for a reply. Critical security
+issues are prioritized -- see [SECURITY.md](SECURITY.md) for expected timelines.
 
 ## What This Support Channel Is Not
 

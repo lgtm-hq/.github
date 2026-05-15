@@ -1,8 +1,9 @@
 # Contributing to LGTM HQ
 
-Thank you for your interest in contributing! This guide covers the conventions shared
-across all repositories in the **lgtm-hq** organization. Individual projects may have
-additional requirements documented in their own `CONTRIBUTING.md`.
+Thank you for your interest in contributing! This guide covers the conventions
+shared across all repositories in the **lgtm-hq** organization. Individual
+projects may have additional requirements documented in their own
+`CONTRIBUTING.md`.
 
 ## Getting Started
 
@@ -24,9 +25,9 @@ additional requirements documented in their own `CONTRIBUTING.md`.
 
 ## Commit Conventions
 
-All repositories use [Conventional Commits](https://www.conventionalcommits.org/).
-The PR title becomes the merge commit message (squash merge), so it must follow this
-format:
+All repositories use
+[Conventional Commits](https://www.conventionalcommits.org/). The PR title
+becomes the merge commit message (squash merge), so it must follow this format:
 
 ```text
 <type>(<optional-scope>): concise summary

@@ -6,8 +6,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for taking the time to report a bug. Please fill out the fields below
-        so we can diagnose and fix the issue quickly.
+        Thank you for taking the time to report a bug.
+        Please fill out the fields below so we can diagnose and fix the issue
+        quickly.
 
   - type: input
     id: title
