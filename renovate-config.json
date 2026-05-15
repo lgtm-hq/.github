@@ -195,6 +195,10 @@
       ]
     },
     {
+      "matchUpdateTypes": ["minor", "major"],
+      "automerge": false
+    },
+    {
       "matchUpdateTypes": ["major"],
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps",
