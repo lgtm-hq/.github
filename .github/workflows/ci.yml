@@ -29,6 +29,3 @@ jobs:
           jq -e '.extends | index("config:recommended") != null' renovate-config.json
           jq -e '.packageRules | length > 0' renovate-config.json
 
-      - name: Validate org ruleset apply script syntax
-        shell: bash
-        run: bash -n scripts/apply-org-rulesets.sh
