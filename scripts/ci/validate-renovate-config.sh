@@ -4,4 +4,4 @@ set -euo pipefail
 
 jq empty renovate-config.json
 jq -e '.extends | index("config:recommended") != null' renovate-config.json
-jq -e '.packageRules | length > 0' renovate-config.json
+jq -e '.packageRules | type == "array" and length > 0' renovate-config.json

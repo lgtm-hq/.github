@@ -48,7 +48,7 @@ We aim to release fixes within **14 days** of confirmation for critical issues a
 ### Action Pinning
 
 All GitHub Actions in our workflows are pinned to full commit SHAs, not version
-tags. The `validate-action-pinning` workflow enforces this policy.
+tags. Organization policy and reusable CI workflows enforce this policy.
 
 ### Dependency Management
 
