@@ -12,8 +12,8 @@ responsibly. **Do not open a public GitHub issue.**
 3. Include the affected version(s) and any relevant environment details.
 4. Allow reasonable time for the issue to be addressed before any public disclosure.
 
-If private vulnerability reporting is not available for a specific repository, email
-**security@lgtm-hq.com** with the details.
+If private vulnerability reporting is not available for a specific repository,
+email [security@lgtm-hq.com](mailto:security@lgtm-hq.com) with the details.
 
 [advisory]: https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability
 
@@ -25,9 +25,9 @@ If private vulnerability reporting is not available for a specific repository, e
 
 ## Supported Versions
 
-Each project documents its supported versions in its own `SECURITY.md` (if present). As
-a general rule, only the **latest minor release** of each project receives security
-patches.
+Each project documents its supported versions in its own `SECURITY.md` (if
+present). As a general rule, only the **latest minor release** of each project
+receives security patches.
 
 ## Disclosure Policy
 
@@ -47,8 +47,8 @@ We aim to release fixes within **14 days** of confirmation for critical issues a
 
 ### Action Pinning
 
-All GitHub Actions in our workflows are pinned to full commit SHAs, not version tags.
-The `validate-action-pinning` workflow enforces this policy.
+All GitHub Actions in our workflows are pinned to full commit SHAs, not version
+tags. Organization policy and reusable CI workflows enforce this policy.
 
 ### Dependency Management
 
