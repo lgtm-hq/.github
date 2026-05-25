@@ -16,19 +16,19 @@
 
 ---
 
-## Projects
+## 🛠️ Projects
 
-| Project | Description | Stack |
-| --- | --- | --- |
-| **[py-lintro](https://github.com/lgtm-hq/py-lintro)** | Unified CLI for code formatting, linting, and quality assurance | Python |
-| **[turbo-themes](https://github.com/lgtm-hq/turbo-themes)** | Universal, accessible theme packs and a drop-in theme selector | TypeScript, CSS |
-| **[lgtm-ci](https://github.com/lgtm-hq/lgtm-ci)** | Reusable composite actions, workflows, and shell libraries for GitHub Actions | Shell, YAML |
-| **[Rustume](https://github.com/lgtm-hq/Rustume)** | Privacy-first, offline-first resume builder powered by Rust and Typst | Rust, TypeScript |
-| **[holy-grail](https://github.com/lgtm-hq/holy-grail)** | The quest for the perfect dev environment — comprehensive setup guides | Astro, MDX |
-| **[ai-skills](https://github.com/lgtm-hq/ai-skills)** | Canonical Agent Skills library for Claude Code, Cursor, Codex, and other agents | Python |
-| **[homebrew-tap](https://github.com/lgtm-hq/homebrew-tap)** | Homebrew tap for installing LGTM tools | Ruby |
+| | Project | Description | Stack |
+| --- | --- | --- | --- |
+| 🧹 | **[py-lintro](https://github.com/lgtm-hq/py-lintro)** | Unified CLI for code formatting, linting, and quality assurance | Python |
+| 🎨 | **[turbo-themes](https://github.com/lgtm-hq/turbo-themes)** | Universal, accessible theme packs and a drop-in theme selector | TypeScript, CSS |
+| 🔄 | **[lgtm-ci](https://github.com/lgtm-hq/lgtm-ci)** | Reusable composite actions, workflows, and shell libraries for GitHub Actions | Shell, YAML |
+| 📄 | **[Rustume](https://github.com/lgtm-hq/Rustume)** | Privacy-first, offline-first resume builder powered by Rust and Typst | Rust, TypeScript |
+| 📖 | **[holy-grail](https://github.com/lgtm-hq/holy-grail)** | The quest for the perfect dev environment — comprehensive setup guides | Astro, MDX |
+| 🤖 | **[ai-skills](https://github.com/lgtm-hq/ai-skills)** | Canonical Agent Skills library for Claude Code, Cursor, Codex, and other agents | Python |
+| 🍺 | **[homebrew-tap](https://github.com/lgtm-hq/homebrew-tap)** | Homebrew tap for installing LGTM tools | Ruby |
 
-## Contributing
+## 🤝 Contributing
 
 We welcome contributions across all repositories. The fundamentals are the same everywhere:
 
@@ -40,11 +40,11 @@ We welcome contributions across all repositories. The fundamentals are the same 
 See any repository's `CONTRIBUTING.md` for project-specific details, or read the
 [org-wide contributing guide](https://github.com/lgtm-hq/.github/blob/main/CONTRIBUTING.md).
 
-## Community
+## 🏠 Community
 
-[Code of Conduct](https://github.com/lgtm-hq/.github/blob/main/CODE_OF_CONDUCT.md) ·
-[Security](https://github.com/lgtm-hq/.github/blob/main/SECURITY.md) ·
-[Support](https://github.com/lgtm-hq/.github/blob/main/SUPPORT.md) ·
-[Contributing](https://github.com/lgtm-hq/.github/blob/main/CONTRIBUTING.md)
+📜 [Code of Conduct](https://github.com/lgtm-hq/.github/blob/main/CODE_OF_CONDUCT.md) ·
+🔒 [Security](https://github.com/lgtm-hq/.github/blob/main/SECURITY.md) ·
+💬 [Support](https://github.com/lgtm-hq/.github/blob/main/SUPPORT.md) ·
+📋 [Contributing](https://github.com/lgtm-hq/.github/blob/main/CONTRIBUTING.md)
 
 <!-- markdownlint-enable MD033 MD013 -->
