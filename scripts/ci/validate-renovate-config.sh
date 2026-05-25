@@ -19,5 +19,24 @@ jq -e '
 jq -e '
   (.customManagers // [])
   | map(select(.depNameTemplate == "lgtm-hq/lgtm-ci"))
-  | length >= 4
+  | . as $managers
+  | ($managers | length) == 4
+  and ($managers | all(has("autoReplaceStringTemplate")))
+  and ($managers | map(select(.description | test("tooling-ref.*single-quoted"))) | length) == 1
+  and ($managers | map(select(.description | test("tooling-ref.*double-quoted"))) | length) == 1
+  and (
+    $managers
+    | map(select(.description | test("checkout ref pins \\(single-quoted\\)")))
+    | length
+  ) == 1
+  and (
+    $managers
+    | map(select(.description | test("checkout ref pins \\(double-quoted\\)")))
+    | length
+  ) == 1
+  and (
+    $managers
+    | map(select(.matchStrings[]? | test("replaceString")))
+    | length
+  ) == 2
 ' renovate-config.json
