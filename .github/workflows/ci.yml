@@ -27,7 +27,7 @@ jobs:
     # yamllint disable-line rule:line-length
     uses: lgtm-hq/lgtm-ci/.github/workflows/reusable-validate.yml@d3736367191ddaf56c41804d2dd5174732ed2d2b  # v0.18.4
     with:
-      name: Validate Org Config
+      job-name: Validate Org Config
       script: scripts/ci/validate-renovate-config.sh
       tooling-ref: "d3736367191ddaf56c41804d2dd5174732ed2d2b"  # v0.18.4
     permissions:
