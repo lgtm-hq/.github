@@ -92,7 +92,8 @@ scanned by the github-actions manager. The org preset adds regex
 ### Enforcement
 
 CI enforcement lives in
-[lgtm-ci `validate-action-pinning`](https://github.com/lgtm-hq/lgtm-ci/issues/220).
+[lgtm-ci action pinning policy](https://github.com/lgtm-hq/lgtm-ci/blob/main/docs/workflow-contract.md#action-pinning-policy)
+(`validate-action-pinning`).
 Workflow changes that use bare SHAs or tag refs fail that check.
 
 [renovate-digest]: https://docs.renovatebot.com/modules/manager/github-actions/#digest-pinning-and-updating
