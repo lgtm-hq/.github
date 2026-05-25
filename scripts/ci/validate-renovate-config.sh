@@ -5,3 +5,11 @@ set -euo pipefail
 jq empty renovate-config.json
 jq -e '.extends | index("config:recommended") != null' renovate-config.json
 jq -e '.packageRules | type == "array" and length > 0' renovate-config.json
+jq -e '
+  [.packageRules[]? | select(.groupName == "lgtm-ci")] | length >= 1
+' renovate-config.json
+jq -e '
+  (.customManagers // [])
+  | map(select(.depNameTemplate == "lgtm-hq/lgtm-ci"))
+  | length >= 4
+' renovate-config.json
