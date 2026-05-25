@@ -25,14 +25,6 @@
       "separateMinorPatch": false
     },
     {
-      "description": "Group lgtm-ci reusable workflow and tooling pins",
-      "matchManagers": ["github-actions", "regex"],
-      "matchPackageNames": ["lgtm-hq/lgtm-ci"],
-      "groupName": "lgtm-ci",
-      "groupSlug": "lgtm-ci",
-      "automerge": false
-    },
-    {
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["patch", "digest"],
       "automerge": true,
@@ -183,6 +175,14 @@
       "matchUpdateTypes": ["patch", "digest"],
       "automerge": true,
       "automergeType": "branch"
+    },
+    {
+      "description": "Group lgtm-ci reusable workflow and tooling pins",
+      "matchManagers": ["github-actions", "regex"],
+      "matchPackageNames": ["lgtm-hq/lgtm-ci"],
+      "groupName": "lgtm-ci",
+      "groupSlug": "lgtm-ci",
+      "automerge": false
     },
     {
       "groupName": "test-tools",
