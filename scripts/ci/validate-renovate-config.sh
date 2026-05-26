@@ -5,3 +5,38 @@ set -euo pipefail
 jq empty renovate-config.json
 jq -e '.extends | index("config:recommended") != null' renovate-config.json
 jq -e '.packageRules | type == "array" and length > 0' renovate-config.json
+jq -e '
+  [.packageRules[]?
+   | select(.groupName == "lgtm-ci")
+   | select(.automerge == false)
+   | select((.matchManagers // []) | index("github-actions") != null)
+   | select((.matchManagers // []) | index("regex") != null)
+   | select(
+       any((.matchPackageNames // [])[]; test("lgtm-hq"))
+     )
+  ] | length >= 1
+' renovate-config.json
+jq -e '
+  (.customManagers // [])
+  | map(select(.depNameTemplate == "lgtm-hq/lgtm-ci"))
+  | . as $managers
+  | ($managers | length) == 4
+  and ($managers | all(has("autoReplaceStringTemplate")))
+  and ($managers | map(select(.description | test("tooling-ref.*single-quoted"))) | length) == 1
+  and ($managers | map(select(.description | test("tooling-ref.*double-quoted"))) | length) == 1
+  and (
+    $managers
+    | map(select(.description | test("checkout ref pins \\(single-quoted\\)")))
+    | length
+  ) == 1
+  and (
+    $managers
+    | map(select(.description | test("checkout ref pins \\(double-quoted\\)")))
+    | length
+  ) == 1
+  and (
+    $managers
+    | map(select(.matchStrings[]? | test("replaceString")))
+    | length
+  ) == 2
+' renovate-config.json

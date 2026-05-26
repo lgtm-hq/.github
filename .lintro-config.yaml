@@ -1,0 +1,46 @@
+---
+# Org config repo — no Python/JS/Rust sources; run applicable lintro tools only.
+# https://github.com/lgtm-hq/py-lintro
+
+enforce:
+  line_length: 88
+
+execution:
+  tool_order: priority
+  fail_fast: false
+
+defaults:
+  yamllint:
+    extends: default
+    rules:
+      comments-indentation: disable
+      comments:
+        min-spaces-from-content: 1
+      line-length:
+        max: 88
+        allow-non-breakable-inline-mappings: true
+
+  shellcheck:
+    severity: warning
+
+tools:
+  actionlint:
+    enabled: true
+  gitleaks:
+    enabled: true
+  # No Python files in this repo. Skip mypy until py-lintro#930 treats that as a
+  # clean no-op in Docker (CI lintro image currently fails with exit code 1).
+  mypy:
+    enabled: false
+  osv_scanner:
+    enabled: true
+  prettier:
+    enabled: true
+  semgrep:
+    enabled: true
+  shellcheck:
+    enabled: true
+  shfmt:
+    enabled: true
+  yamllint:
+    enabled: true
