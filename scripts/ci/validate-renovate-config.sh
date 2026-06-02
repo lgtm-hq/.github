@@ -50,6 +50,10 @@ jq -e '
   )
   and (
     $managers
+    | all(.autoReplaceStringTemplate | test("\\{\\{newDigest\\}\\}"))
+  )
+  and (
+    $managers
     | all(.autoReplaceStringTemplate | test("# \\{\\{newVersion\\}\\}"))
   )
 ' renovate-config.json
