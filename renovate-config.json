@@ -234,48 +234,44 @@
       "customType": "regex",
       "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
       "matchStrings": [
-        "tooling-ref:\\s*'[a-f0-9]{40}'\\s*#\\s*v(?<currentValue>[0-9]+(?:\\.[0-9]+)*)"
+        "tooling-ref:\\s*'[a-f0-9]{40}'\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*)"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
-      "extractVersionTemplate": "^v(?<version>.*)$",
-      "autoReplaceStringTemplate": "tooling-ref: '{{newDigest}}'  # v{{newVersion}}"
+      "autoReplaceStringTemplate": "tooling-ref: '{{newDigest}}'  # {{newVersion}}"
     },
     {
       "description": "Track lgtm-ci tooling-ref SHA pins (double-quoted, not visible to github-actions manager)",
       "customType": "regex",
       "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
       "matchStrings": [
-        "tooling-ref:\\s*\"[a-f0-9]{40}\"\\s*#\\s*v(?<currentValue>[0-9]+(?:\\.[0-9]+)*)"
+        "tooling-ref:\\s*\"[a-f0-9]{40}\"\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*)"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
-      "extractVersionTemplate": "^v(?<version>.*)$",
-      "autoReplaceStringTemplate": "tooling-ref: \"{{newDigest}}\"  # v{{newVersion}}"
+      "autoReplaceStringTemplate": "tooling-ref: \"{{newDigest}}\"  # {{newVersion}}"
     },
     {
       "description": "Track manual lgtm-ci checkout ref pins (single-quoted)",
       "customType": "regex",
       "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
       "matchStrings": [
-        "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*'[a-f0-9]{40}'\\s*#\\s*v(?<currentValue>[0-9]+(?:\\.[0-9]+)*))"
+        "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*'[a-f0-9]{40}'\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*))"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
-      "extractVersionTemplate": "^v(?<version>.*)$",
-      "autoReplaceStringTemplate": "ref: '{{newDigest}}'  # v{{newVersion}}"
+      "autoReplaceStringTemplate": "ref: '{{newDigest}}'  # {{newVersion}}"
     },
     {
       "description": "Track manual lgtm-ci checkout ref pins (double-quoted)",
       "customType": "regex",
       "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
       "matchStrings": [
-        "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*\"[a-f0-9]{40}\"\\s*#\\s*v(?<currentValue>[0-9]+(?:\\.[0-9]+)*))"
+        "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*\"[a-f0-9]{40}\"\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*))"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
-      "extractVersionTemplate": "^v(?<version>.*)$",
-      "autoReplaceStringTemplate": "ref: \"{{newDigest}}\"  # v{{newVersion}}"
+      "autoReplaceStringTemplate": "ref: \"{{newDigest}}\"  # {{newVersion}}"
     }
   ]
 }
