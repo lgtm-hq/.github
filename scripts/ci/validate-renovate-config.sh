@@ -46,6 +46,10 @@ jq -e '
   )
   and (
     $managers
+    | all(any(.matchStrings[]?; test("\\(\\?<currentDigest>\\[a-f0-9]")))
+  )
+  and (
+    $managers
     | all(.autoReplaceStringTemplate | test("# \\{\\{newVersion\\}\\}"))
   )
 ' renovate-config.json
