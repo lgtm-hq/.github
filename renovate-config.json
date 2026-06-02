@@ -234,7 +234,7 @@
       "customType": "regex",
       "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
       "matchStrings": [
-        "tooling-ref:\\s*'[a-f0-9]{40}'\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*)"
+        "tooling-ref:\\s*'(?<currentDigest>[a-f0-9]{40})'\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*)"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
@@ -245,7 +245,7 @@
       "customType": "regex",
       "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
       "matchStrings": [
-        "tooling-ref:\\s*\"[a-f0-9]{40}\"\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*)"
+        "tooling-ref:\\s*\"(?<currentDigest>[a-f0-9]{40})\"\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*)"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
@@ -256,7 +256,7 @@
       "customType": "regex",
       "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
       "matchStrings": [
-        "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*'[a-f0-9]{40}'\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*))"
+        "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*'(?<currentDigest>[a-f0-9]{40})'\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*))"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
@@ -267,7 +267,7 @@
       "customType": "regex",
       "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
       "matchStrings": [
-        "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*\"[a-f0-9]{40}\"\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*))"
+        "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*\"(?<currentDigest>[a-f0-9]{40})\"\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*))"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
