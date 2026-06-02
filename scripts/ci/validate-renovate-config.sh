@@ -39,4 +39,13 @@ jq -e '
     | map(select(.matchStrings[]? | test("replaceString")))
     | length
   ) == 2
+  and ($managers | all(has("extractVersionTemplate") | not))
+  and (
+    $managers
+    | all(any(.matchStrings[]?; test("\\(\\?<currentValue>v\\[0-9]")))
+  )
+  and (
+    $managers
+    | all(.autoReplaceStringTemplate | test("# \\{\\{newVersion\\}\\}"))
+  )
 ' renovate-config.json

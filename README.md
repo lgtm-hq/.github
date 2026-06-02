@@ -87,7 +87,9 @@ disabled by Renovate][renovate-digest] and require manual repins.
 
 Fields outside `uses:` — such as `tooling-ref:` and checkout `ref:` — are not
 scanned by the github-actions manager. The org preset adds regex
-`customManagers` for annotated lgtm-ci pins in those fields.
+`customManagers` for annotated lgtm-ci pins in those fields. Those managers
+capture the full release tag from the comment (e.g. `v0.29.1`, not `0.29.1`) so
+Renovate can resolve the matching Git tag commit SHA for `{{newDigest}}`.
 
 ### Enforcement
 
