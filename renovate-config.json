@@ -1,6 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
+  "vulnerabilityAlerts": {
+    "addLabels": ["security"],
+    "commitMessageSuffix": "[SECURITY]",
+    "automerge": false
+  },
   "platformCommit": true,
   "assigneesFromCodeOwners": true,
   "reviewersFromCodeOwners": false,
@@ -170,6 +177,11 @@
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps",
       "commitMessagePrefix": "chore(deps):"
+    },
+    {
+      "description": "Require human review on vulnerability alert PRs",
+      "matchIsVulnerabilityAlert": true,
+      "automerge": false
     },
     {
       "matchUpdateTypes": ["patch", "digest"],

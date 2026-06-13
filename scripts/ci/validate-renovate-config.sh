@@ -4,6 +4,19 @@ set -euo pipefail
 
 jq empty renovate-config.json
 jq -e '.extends | index("config:recommended") != null' renovate-config.json
+jq -e '.osvVulnerabilityAlerts == true' renovate-config.json
+jq -e '.dependencyDashboardOSVVulnerabilitySummary == "unresolved"' renovate-config.json
+jq -e '
+  (.vulnerabilityAlerts.addLabels | index("security") != null)
+  and (.vulnerabilityAlerts.commitMessageSuffix == "[SECURITY]")
+  and (.vulnerabilityAlerts.automerge == false)
+' renovate-config.json
+jq -e '
+  [.packageRules[]?
+   | select(.matchIsVulnerabilityAlert == true)
+   | select(.automerge == false)
+  ] | length >= 1
+' renovate-config.json
 jq -e '.packageRules | type == "array" and length > 0' renovate-config.json
 jq -e '
   [.packageRules[]?

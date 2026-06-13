@@ -100,6 +100,27 @@ Workflow changes that use bare SHAs or tag refs fail that check.
 
 [renovate-digest]: https://docs.renovatebot.com/modules/manager/github-actions/#digest-pinning-and-updating
 
+### OSV vulnerability alerting
+
+The org Renovate preset enables `osvVulnerabilityAlerts` so Renovate opens PRs
+when OSV reports a vulnerability in a **direct manifest dependency** (for
+example, a semver range in `package.json`, `pyproject.toml`, or
+`Cargo.toml`). The dependency dashboard lists unresolved OSV findings via
+`dependencyDashboardOSVVulnerabilitySummary: unresolved`. Security-related
+Renovate PRs add the `security` label (alongside `dependencies`) and include a
+`[SECURITY]` commit-message suffix.
+
+**Transitive lockfile CVEs** are not fully covered by Renovate OSV alerting.
+Those still rely on GitHub Dependabot alerts and CI `osv-scanner` runs in
+[lgtm-ci](https://github.com/lgtm-hq/lgtm-ci). Keep both layers enabled on org
+repos.
+
+Repos with JavaScript or Bun dependencies need `registry.npmjs.org:443` in the
+`renovate.yml` workflow egress allowlist for normal npm package resolution and
+updates. OSV vulnerability data is provided from the OSV database via
+`@renovatebot/osv-offline` (managed locally by the tool) and is not retrieved
+from the npm registry.
+
 ## 📜 License
 
 MIT License — see [LICENSE](LICENSE) for details.
