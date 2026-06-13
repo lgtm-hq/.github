@@ -116,8 +116,9 @@ Those still rely on GitHub Dependabot alerts and CI `osv-scanner` runs in
 repos.
 
 Repos with JavaScript or Bun dependencies need `registry.npmjs.org:443` in the
-`renovate.yml` workflow egress allowlist so Renovate can query the npm registry
-for vulnerability metadata.
+`renovate.yml` workflow egress allowlist for normal npm package resolution and
+updates. OSV vulnerability metadata is fetched locally via
+`@renovatebot/osv-offline`, not from the npm registry.
 
 ## 📜 License
 

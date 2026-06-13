@@ -58,7 +58,8 @@ tags. Organization policy and reusable CI workflows enforce this policy.
 - **Transitive lockfile CVEs** still rely on GitHub Dependabot alerts and CI
   `osv-scanner` — Renovate OSV alerting does not replace those layers.
 - Org repos with JavaScript or Bun deps need `registry.npmjs.org:443` in
-  `renovate.yml` egress allowlists for npm vulnerability lookups.
+  `renovate.yml` egress allowlists for npm package resolution (OSV data is
+  fetched locally via `@renovatebot/osv-offline`, not from the npm registry).
 - Security updates are prioritized and reviewed promptly.
 - GitHub secret scanning is enabled on all repositories.
 
