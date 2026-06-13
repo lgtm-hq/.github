@@ -9,6 +9,7 @@ jq -e '.dependencyDashboardOSVVulnerabilitySummary == "unresolved"' renovate-con
 jq -e '
   (.vulnerabilityAlerts.labels | index("security") != null)
   and (.vulnerabilityAlerts.commitMessageSuffix == "[SECURITY]")
+  and (.vulnerabilityAlerts.automerge == false)
 ' renovate-config.json
 jq -e '.packageRules | type == "array" and length > 0' renovate-config.json
 jq -e '
