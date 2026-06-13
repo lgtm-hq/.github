@@ -53,6 +53,12 @@ tags. Organization policy and reusable CI workflows enforce this policy.
 ### Dependency Management
 
 - [Renovate](https://www.mend.io/renovate/) monitors dependencies across the org.
+- Renovate `osvVulnerabilityAlerts` opens PRs for vulnerable **direct manifest**
+  dependencies; the dependency dashboard summarizes unresolved OSV findings.
+- **Transitive lockfile CVEs** still rely on GitHub Dependabot alerts and CI
+  `osv-scanner` — Renovate OSV alerting does not replace those layers.
+- Org repos with JavaScript or Bun deps need `registry.npmjs.org:443` in
+  `renovate.yml` egress allowlists for npm vulnerability lookups.
 - Security updates are prioritized and reviewed promptly.
 - GitHub secret scanning is enabled on all repositories.
 

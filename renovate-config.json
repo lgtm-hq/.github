@@ -1,6 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "commitMessageSuffix": "[SECURITY]"
+  },
   "platformCommit": true,
   "assigneesFromCodeOwners": true,
   "reviewersFromCodeOwners": false,
