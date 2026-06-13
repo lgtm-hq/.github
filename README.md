@@ -107,8 +107,8 @@ when OSV reports a vulnerability in a **direct manifest dependency** (for
 example, a semver range in `package.json`, `pyproject.toml`, or
 `Cargo.toml`). The dependency dashboard lists unresolved OSV findings via
 `dependencyDashboardOSVVulnerabilitySummary: unresolved`. Security-related
-Renovate PRs are labeled `security` and include a `[SECURITY]` commit-message
-suffix.
+Renovate PRs add the `security` label (alongside `dependencies`) and include a
+`[SECURITY]` commit-message suffix.
 
 **Transitive lockfile CVEs** are not fully covered by Renovate OSV alerting.
 Those still rely on GitHub Dependabot alerts and CI `osv-scanner` runs in
@@ -117,8 +117,9 @@ repos.
 
 Repos with JavaScript or Bun dependencies need `registry.npmjs.org:443` in the
 `renovate.yml` workflow egress allowlist for normal npm package resolution and
-updates. OSV vulnerability metadata is fetched locally via
-`@renovatebot/osv-offline`, not from the npm registry.
+updates. OSV vulnerability data is provided from the OSV database via
+`@renovatebot/osv-offline` (managed locally by the tool) and is not retrieved
+from the npm registry.
 
 ## 📜 License
 
