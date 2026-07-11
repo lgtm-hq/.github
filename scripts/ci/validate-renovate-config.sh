@@ -3,7 +3,7 @@
 set -euo pipefail
 
 jq empty renovate-config.json
-jq -e '.extends | index("config:recommended") != null' renovate-config.json
+jq -e '.extends | index("config:best-practices") != null' renovate-config.json
 jq -e '.osvVulnerabilityAlerts == true' renovate-config.json
 jq -e '.dependencyDashboardOSVVulnerabilitySummary == "unresolved"' renovate-config.json
 jq -e '

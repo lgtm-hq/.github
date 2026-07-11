@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": ["config:best-practices"],
   "osvVulnerabilityAlerts": true,
   "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
   "vulnerabilityAlerts": {
@@ -26,7 +26,6 @@
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
-      "pinDigests": true,
       "groupName": "github-actions",
       "separateMinorPatch": false
     },
@@ -217,6 +216,13 @@
       "matchDepTypes": ["requires-python"],
       "matchManagers": ["pep621"],
       "enabled": false
+    },
+    {
+      "description": "Group lintro Docker image and PyPI package updates",
+      "groupName": "lintro",
+      "groupSlug": "lintro",
+      "matchPackageNames": ["ghcr.io/lgtm-hq/py-lintro", "lintro"],
+      "automerge": false
     },
     {
       "description": "Group lgtm-ci reusable workflow and tooling pins",
