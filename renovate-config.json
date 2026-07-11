@@ -325,6 +325,15 @@
       "groupName": "lgtm-ci",
       "groupSlug": "lgtm-ci",
       "automerge": false
+    },
+    {
+      "description": "Show version and update type in titles, incl. grouped PRs",
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "commitMessageExtra": "to {{newVersion}} ({{updateType}})"
     }
   ],
   "lockFileMaintenance": {
