@@ -11,19 +11,13 @@ jq -e '
   and (.vulnerabilityAlerts.commitMessageSuffix == "[SECURITY]")
   and (.vulnerabilityAlerts.automerge == false)
 ' renovate-config.json
-jq -e '
-  [.packageRules[]?
-   | select(.matchIsVulnerabilityAlert == true)
-   | select(.automerge == false)
-  ] | length >= 1
-' renovate-config.json
 jq -e '.packageRules | type == "array" and length > 0' renovate-config.json
 jq -e '
   [.packageRules[]?
    | select(.groupName == "lgtm-ci")
    | select(.automerge == false)
    | select((.matchManagers // []) | index("github-actions") != null)
-   | select((.matchManagers // []) | index("regex") != null)
+   | select((.matchManagers // []) | index("custom.regex") != null)
    | select(
        any((.matchPackageNames // [])[]; test("lgtm-hq"))
      )
