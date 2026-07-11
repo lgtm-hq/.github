@@ -8,7 +8,7 @@
     "commitMessageSuffix": "[SECURITY]",
     "automerge": false
   },
-  "platformCommit": true,
+  "platformCommit": "enabled",
   "assigneesFromCodeOwners": true,
   "reviewersFromCodeOwners": false,
   "prHourlyLimit": 2,
@@ -23,7 +23,6 @@
   "semanticCommitType": "chore",
   "semanticCommitScope": "deps",
   "commitMessagePrefix": "chore(deps):",
-  "prTitle": "{{semanticCommitType}}({{semanticCommitScope}}): {{#if isMajor}}update {{depName}} to {{newVersion}} (major){{else if isMinor}}update {{depName}} to {{newVersion}} (minor){{else}}{{#if newVersion}}update {{depName}} to {{newVersion}}{{else}}update {{depName}} digest{{/if}}{{/if}}",
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
@@ -179,11 +178,6 @@
       "commitMessagePrefix": "chore(deps):"
     },
     {
-      "description": "Require human review on vulnerability alert PRs",
-      "matchIsVulnerabilityAlert": true,
-      "automerge": false
-    },
-    {
       "matchUpdateTypes": ["patch", "digest"],
       "automerge": true,
       "automergeType": "branch"
@@ -226,7 +220,7 @@
     },
     {
       "description": "Group lgtm-ci reusable workflow and tooling pins",
-      "matchManagers": ["github-actions", "regex"],
+      "matchManagers": ["github-actions", "custom.regex"],
       "matchPackageNames": ["/^lgtm-hq\\/lgtm-ci/"],
       "groupName": "lgtm-ci",
       "groupSlug": "lgtm-ci",
