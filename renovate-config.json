@@ -45,10 +45,12 @@
       ],
       "matchUpdateTypes": [
         "patch",
-        "digest"
+        "digest",
+        "pin",
+        "pinDigest"
       ],
       "automerge": true,
-      "automergeType": "branch"
+      "automergeType": "pr"
     },
     {
       "matchManagers": [
@@ -252,10 +254,12 @@
     {
       "matchUpdateTypes": [
         "patch",
-        "digest"
+        "digest",
+        "pin",
+        "pinDigest"
       ],
       "automerge": true,
-      "automergeType": "branch"
+      "automergeType": "pr"
     },
     {
       "groupName": "test-tools",
@@ -311,7 +315,8 @@
         "ghcr.io/lgtm-hq/py-lintro",
         "lintro"
       ],
-      "automerge": false
+      "automerge": true,
+      "automergeType": "pr"
     },
     {
       "description": "Group lgtm-ci reusable workflow and tooling pins",
