@@ -1,10 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices"],
+  "extends": [
+    "config:best-practices"
+  ],
   "osvVulnerabilityAlerts": true,
   "dependencyDashboardOSVVulnerabilitySummary": "unresolved",
   "vulnerabilityAlerts": {
-    "addLabels": ["security"],
+    "addLabels": [
+      "security"
+    ],
     "commitMessageSuffix": "[SECURITY]",
     "automerge": false
   },
@@ -15,119 +19,174 @@
   "prConcurrentLimit": 5,
   "dependencyDashboard": true,
   "dependencyDashboardTitle": "Dependency Dashboard",
-  "schedule": ["after 22:00", "before 23:00"],
+  "schedule": [
+    "after 22:00",
+    "before 23:00"
+  ],
   "timezone": "UTC",
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "rangeStrategy": "replace",
   "semanticCommits": "enabled",
   "semanticCommitType": "chore",
   "semanticCommitScope": "deps",
-  "commitMessagePrefix": "chore(deps):",
   "packageRules": [
     {
-      "matchManagers": ["github-actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
       "groupName": "github-actions",
       "separateMinorPatch": false
     },
     {
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["patch", "digest"],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "digest"
+      ],
       "automerge": true,
       "automergeType": "branch"
     },
     {
-      "matchManagers": ["npm"],
-      "matchDepTypes": ["devDependencies"],
+      "matchManagers": [
+        "npm"
+      ],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
       "semanticCommitType": "chore",
-      "semanticCommitScope": "deps-dev",
-      "commitMessagePrefix": "chore(deps-dev):"
+      "semanticCommitScope": "deps-dev"
     },
     {
-      "matchManagers": ["npm"],
+      "matchManagers": [
+        "npm"
+      ],
       "matchDepTypes": [
         "dependencies",
         "optionalDependencies",
         "peerDependencies"
       ],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "semanticCommitType": "fix",
-      "semanticCommitScope": "deps",
-      "commitMessagePrefix": "fix(deps):"
+      "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["pep621", "uv"],
+      "matchManagers": [
+        "pep621",
+        "uv"
+      ],
       "matchDepTypes": [
         "dependency-groups",
         "tool.uv.dev-dependencies",
         "tool.pdm.dev-dependencies"
       ],
       "semanticCommitType": "chore",
-      "semanticCommitScope": "deps-dev",
-      "commitMessagePrefix": "chore(deps-dev):"
+      "semanticCommitScope": "deps-dev"
     },
     {
-      "matchManagers": ["pep621", "uv"],
+      "matchManagers": [
+        "pep621",
+        "uv"
+      ],
       "matchDepTypes": [
         "project.dependencies",
         "project.optional-dependencies"
       ],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "semanticCommitType": "fix",
-      "semanticCommitScope": "deps",
-      "commitMessagePrefix": "fix(deps):"
+      "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["poetry"],
-      "matchDepTypes": ["dev-dependencies", "dev"],
+      "matchManagers": [
+        "poetry"
+      ],
+      "matchDepTypes": [
+        "dev-dependencies",
+        "dev"
+      ],
       "semanticCommitType": "chore",
-      "semanticCommitScope": "deps-dev",
-      "commitMessagePrefix": "chore(deps-dev):"
+      "semanticCommitScope": "deps-dev"
     },
     {
-      "matchManagers": ["poetry"],
+      "matchManagers": [
+        "poetry"
+      ],
       "matchDepTypes": [
         "dependencies",
         "extras",
         "project.dependencies",
         "project.optional-dependencies"
       ],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "semanticCommitType": "fix",
-      "semanticCommitScope": "deps",
-      "commitMessagePrefix": "fix(deps):"
+      "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["cargo"],
-      "matchDepTypes": ["dev-dependencies", "build-dependencies"],
+      "matchManagers": [
+        "cargo"
+      ],
+      "matchDepTypes": [
+        "dev-dependencies",
+        "build-dependencies"
+      ],
       "semanticCommitType": "chore",
-      "semanticCommitScope": "deps-dev",
-      "commitMessagePrefix": "chore(deps-dev):"
+      "semanticCommitScope": "deps-dev"
     },
     {
-      "matchManagers": ["cargo"],
-      "matchDepTypes": ["dependencies"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "cargo"
+      ],
+      "matchDepTypes": [
+        "dependencies"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "semanticCommitType": "fix",
-      "semanticCommitScope": "deps",
-      "commitMessagePrefix": "fix(deps):"
+      "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["pipenv"],
-      "matchDepTypes": ["dev-packages"],
+      "matchManagers": [
+        "pipenv"
+      ],
+      "matchDepTypes": [
+        "dev-packages"
+      ],
       "semanticCommitType": "chore",
-      "semanticCommitScope": "deps-dev",
-      "commitMessagePrefix": "chore(deps-dev):"
+      "semanticCommitScope": "deps-dev"
     },
     {
-      "matchManagers": ["pipenv"],
-      "matchDepTypes": ["packages"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "pipenv"
+      ],
+      "matchDepTypes": [
+        "packages"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "semanticCommitType": "fix",
-      "semanticCommitScope": "deps",
-      "commitMessagePrefix": "fix(deps):"
+      "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["pip_setup", "setup-cfg"],
+      "matchManagers": [
+        "pip_setup",
+        "setup-cfg"
+      ],
       "matchDepTypes": [
         "tests_require",
         "setup_requires",
@@ -137,27 +196,41 @@
         "extras_require:lint"
       ],
       "semanticCommitType": "chore",
-      "semanticCommitScope": "deps-dev",
-      "commitMessagePrefix": "chore(deps-dev):"
+      "semanticCommitScope": "deps-dev"
     },
     {
-      "matchManagers": ["pip_setup", "setup-cfg"],
-      "matchDepTypes": ["install_requires"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "pip_setup",
+        "setup-cfg"
+      ],
+      "matchDepTypes": [
+        "install_requires"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "semanticCommitType": "fix",
-      "semanticCommitScope": "deps",
-      "commitMessagePrefix": "fix(deps):"
+      "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["pip_requirements"],
-      "matchFileNames": ["**/requirements*.txt"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "pip_requirements"
+      ],
+      "matchFileNames": [
+        "**/requirements*.txt"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "semanticCommitType": "fix",
-      "semanticCommitScope": "deps",
-      "commitMessagePrefix": "fix(deps):"
+      "semanticCommitScope": "deps"
     },
     {
-      "matchManagers": ["pip_requirements"],
+      "matchManagers": [
+        "pip_requirements"
+      ],
       "matchFileNames": [
         "**/requirements-dev*.txt",
         "**/dev-requirements*.txt",
@@ -167,17 +240,20 @@
         "**/requirements/test*.txt"
       ],
       "semanticCommitType": "chore",
-      "semanticCommitScope": "deps-dev",
-      "commitMessagePrefix": "chore(deps-dev):"
+      "semanticCommitScope": "deps-dev"
     },
     {
-      "matchUpdateTypes": ["digest"],
+      "matchUpdateTypes": [
+        "digest"
+      ],
       "semanticCommitType": "chore",
-      "semanticCommitScope": "deps",
-      "commitMessagePrefix": "chore(deps):"
+      "semanticCommitScope": "deps"
     },
     {
-      "matchUpdateTypes": ["patch", "digest"],
+      "matchUpdateTypes": [
+        "patch",
+        "digest"
+      ],
       "automerge": true,
       "automergeType": "branch"
     },
@@ -200,51 +276,79 @@
       ]
     },
     {
-      "matchUpdateTypes": ["minor", "major"],
+      "matchUpdateTypes": [
+        "minor",
+        "major"
+      ],
       "automerge": false
     },
     {
-      "matchUpdateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "semanticCommitType": "chore",
       "semanticCommitScope": "deps",
-      "commitMessagePrefix": "chore(deps):",
       "groupName": "all major dependencies",
       "groupSlug": "all-major",
-      "matchPackageNames": ["**"]
+      "matchPackageNames": [
+        "**"
+      ]
     },
     {
-      "matchDepTypes": ["requires-python"],
-      "matchManagers": ["pep621"],
+      "matchDepTypes": [
+        "requires-python"
+      ],
+      "matchManagers": [
+        "pep621"
+      ],
       "enabled": false
     },
     {
       "description": "Group lintro Docker image and PyPI package updates",
       "groupName": "lintro",
       "groupSlug": "lintro",
-      "matchPackageNames": ["ghcr.io/lgtm-hq/py-lintro", "lintro"],
+      "matchPackageNames": [
+        "ghcr.io/lgtm-hq/py-lintro",
+        "lintro"
+      ],
       "automerge": false
     },
     {
       "description": "Group lgtm-ci reusable workflow and tooling pins",
-      "matchManagers": ["github-actions", "custom.regex"],
-      "matchPackageNames": ["/^lgtm-hq\\/lgtm-ci/"],
+      "matchManagers": [
+        "github-actions",
+        "custom.regex"
+      ],
+      "matchPackageNames": [
+        "/^lgtm-hq\\/lgtm-ci/"
+      ],
       "groupName": "lgtm-ci",
       "groupSlug": "lgtm-ci",
       "automerge": false
+    },
+    {
+      "description": "Show version and update type in titles, incl. grouped PRs",
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "commitMessageExtra": "to {{newVersion}} ({{updateType}})"
     }
   ],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
     "semanticCommitType": "chore",
-    "semanticCommitScope": "deps",
-    "commitMessagePrefix": "chore(deps):"
+    "semanticCommitScope": "deps"
   },
   "customManagers": [
     {
       "description": "Track lgtm-ci tooling-ref SHA pins (single-quoted, not visible to github-actions manager)",
       "customType": "regex",
-      "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
       "matchStrings": [
         "tooling-ref:\\s*'(?<currentDigest>[a-f0-9]{40})'\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*)"
       ],
@@ -255,7 +359,9 @@
     {
       "description": "Track lgtm-ci tooling-ref SHA pins (double-quoted, not visible to github-actions manager)",
       "customType": "regex",
-      "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
       "matchStrings": [
         "tooling-ref:\\s*\"(?<currentDigest>[a-f0-9]{40})\"\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*)"
       ],
@@ -266,7 +372,9 @@
     {
       "description": "Track manual lgtm-ci checkout ref pins (single-quoted)",
       "customType": "regex",
-      "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
       "matchStrings": [
         "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*'(?<currentDigest>[a-f0-9]{40})'\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*))"
       ],
@@ -277,7 +385,9 @@
     {
       "description": "Track manual lgtm-ci checkout ref pins (double-quoted)",
       "customType": "regex",
-      "managerFilePatterns": ["/^\\.github/workflows/.*\\.ya?ml$/"],
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
       "matchStrings": [
         "(?s)repository:\\s*lgtm-hq/lgtm-ci.*?(?<replaceString>ref:\\s*\"(?<currentDigest>[a-f0-9]{40})\"\\s*#\\s*(?<currentValue>v[0-9]+(?:\\.[0-9]+)*))"
       ],
