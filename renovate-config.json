@@ -314,6 +314,20 @@
       "matchPackageNames": [
         "ghcr.io/lgtm-hq/py-lintro",
         "lintro"
+      ]
+    },
+    {
+      "description": "Automerge lintro group except majors (breaking releases need review)",
+      "matchPackageNames": [
+        "ghcr.io/lgtm-hq/py-lintro",
+        "lintro"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor",
+        "digest",
+        "pin",
+        "pinDigest"
       ],
       "automerge": true,
       "automergeType": "pr"
