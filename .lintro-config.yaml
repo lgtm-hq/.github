@@ -9,17 +9,11 @@ execution:
   tool_order: priority
   fail_fast: false
 
+# Fallbacks for tools without a native config file. yamllint is configured in
+# the root .yamllint instead — `defaults` is only consulted when no native
+# config exists, so a block here would be dead config and would silently
+# disagree with .yamllint.
 defaults:
-  yamllint:
-    extends: default
-    rules:
-      comments-indentation: disable
-      comments:
-        min-spaces-from-content: 1
-      line-length:
-        max: 88
-        allow-non-breakable-inline-mappings: true
-
   shellcheck:
     severity: warning
 
