@@ -373,7 +373,7 @@
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
-      "autoReplaceStringTemplate": "tooling-ref: '{{newDigest}}'  # {{newVersion}}"
+      "autoReplaceStringTemplate": "tooling-ref: '{{newDigest}}' # {{newVersion}}"
     },
     {
       "description": "Track lgtm-ci tooling-ref SHA pins (double-quoted, not visible to github-actions manager)",
@@ -386,7 +386,7 @@
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
-      "autoReplaceStringTemplate": "tooling-ref: \"{{newDigest}}\"  # {{newVersion}}"
+      "autoReplaceStringTemplate": "tooling-ref: \"{{newDigest}}\" # {{newVersion}}"
     },
     {
       "description": "Track manual lgtm-ci checkout ref pins (single-quoted)",
@@ -399,7 +399,7 @@
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
-      "autoReplaceStringTemplate": "ref: '{{newDigest}}'  # {{newVersion}}"
+      "autoReplaceStringTemplate": "ref: '{{newDigest}}' # {{newVersion}}"
     },
     {
       "description": "Track manual lgtm-ci checkout ref pins (double-quoted)",
@@ -412,7 +412,7 @@
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
-      "autoReplaceStringTemplate": "ref: \"{{newDigest}}\"  # {{newVersion}}"
+      "autoReplaceStringTemplate": "ref: \"{{newDigest}}\" # {{newVersion}}"
     }
   ]
 }

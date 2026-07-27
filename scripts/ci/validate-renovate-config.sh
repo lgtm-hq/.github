@@ -61,6 +61,9 @@ jq -e '
   )
   and (
     $managers
-    | all(.autoReplaceStringTemplate | test("# \\{\\{newVersion\\}\\}"))
+    | all(
+        .autoReplaceStringTemplate
+        | test("[^[:space:]] # \\{\\{newVersion\\}\\}$")
+      )
   )
 ' renovate-config.json
