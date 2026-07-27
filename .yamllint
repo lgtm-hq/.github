@@ -1,0 +1,12 @@
+---
+# Native yamllint config. lintro's `defaults.yamllint` fallback in
+# .lintro-config.yaml is not applied in this repo (verified: yamllint runs with
+# stock defaults), so the single-space comment allowance is declared here.
+extends: default
+
+rules:
+  # Renovate's org preset emits `ref: '<sha>' # vX.Y.Z` with exactly one space
+  # before the comment, matching prettier's YAML normalisation. Accept one
+  # space so lgtm-ci bumps do not open red. Two spaces still pass.
+  comments:
+    min-spaces-from-content: 1
