@@ -1,12 +1,26 @@
 ---
-# Native yamllint config. lintro's `defaults.yamllint` fallback in
-# .lintro-config.yaml is not applied in this repo (verified: yamllint runs with
-# stock defaults), so the single-space comment allowance is declared here.
+# Native yamllint config.
+#
+# This must be a native file, not the `defaults.yamllint` block that used to
+# live in .lintro-config.yaml: lintro only consults `defaults` when no native
+# config exists, so that block was inert and yamllint ran on stock defaults
+# (verified — it enforced the stock 80-char line-length, not the configured 88).
+#
+# Mirrors lgtm-hq/py-lintro's root .yamllint.
 extends: default
 
 rules:
-  # Renovate's org preset emits `ref: '<sha>' # vX.Y.Z` with exactly one space
-  # before the comment, matching prettier's YAML normalisation. Accept one
-  # space so lgtm-ci bumps do not open red. Two spaces still pass.
+  # GitHub Actions comments often don't follow indentation expectations.
+  comments-indentation: disable
+
+  # Allow 1 space to be compatible with prettier, which normalises a YAML
+  # trailing comment to exactly one space. This is also what the org Renovate
+  # preset emits for lgtm-ci pins (`ref: '<sha>' # vX.Y.Z`), so bumps do not
+  # open red. Two spaces still pass — only the minimum is relaxed.
   comments:
     min-spaces-from-content: 1
+
+  # Avoid noise on CI YAML with long pinned SHAs and long `with:` blocks.
+  line-length:
+    max: 88
+    allow-non-breakable-inline-mappings: true
