@@ -30,6 +30,11 @@ tools:
     enabled: true
   prettier:
     enabled: true
+  # lintro 0.147.x bundles pylint, which scans the vendored lgtm-ci tooling
+  # scripts here and in consumers; that catalogue is gated upstream in
+  # lgtm-ci's own repo. Keep pylint out of this repo's gate.
+  pylint:
+    enabled: false
   semgrep:
     enabled: true
   shellcheck:
