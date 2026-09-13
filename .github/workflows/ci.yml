@@ -17,19 +17,19 @@ jobs:
       contents: read
       packages: read  # pull lintro-image from GHCR in reusable-quality-lint
     # yamllint disable-line rule:line-length
-    uses: lgtm-hq/lgtm-ci/.github/workflows/reusable-quality-lint.yml@f0e999fd9934a43c8d1d6a1c68ee2d1a8a978f36 # v0.69.8
+    uses: lgtm-hq/lgtm-ci/.github/workflows/reusable-quality-lint.yml@737747b1b8590900afc41a72efdd372e244ea39d # v0.69.10
     with:
       job-name: "🛠️ Lintro Code Quality"
-      tooling-ref: 'f0e999fd9934a43c8d1d6a1c68ee2d1a8a978f36' # v0.69.8
+      tooling-ref: '737747b1b8590900afc41a72efdd372e244ea39d' # v0.69.10
 
   validate:
     needs: quality
     # yamllint disable-line rule:line-length
-    uses: lgtm-hq/lgtm-ci/.github/workflows/reusable-validate.yml@f0e999fd9934a43c8d1d6a1c68ee2d1a8a978f36 # v0.69.8
+    uses: lgtm-hq/lgtm-ci/.github/workflows/reusable-validate.yml@737747b1b8590900afc41a72efdd372e244ea39d # v0.69.10
     with:
       job-name: "🧾 Validate Org Config"
       script: scripts/ci/validate-renovate-config.sh
-      tooling-ref: 'f0e999fd9934a43c8d1d6a1c68ee2d1a8a978f36' # v0.69.8
+      tooling-ref: '737747b1b8590900afc41a72efdd372e244ea39d' # v0.69.10
     permissions:
       contents: read
       pull-requests: write
