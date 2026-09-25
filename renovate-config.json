@@ -13,6 +13,11 @@
     "automerge": false
   },
   "platformCommit": "enabled",
+  "gitIgnoredAuthors": [
+    "lgtm-digest-bump[bot]@users.noreply.github.com",
+    "323632330+lgtm-digest-bump[bot]@users.noreply.github.com"
+  ],
+  "updateNotScheduled": false,
   "assigneesFromCodeOwners": true,
   "reviewersFromCodeOwners": false,
   "prHourlyLimit": 2,

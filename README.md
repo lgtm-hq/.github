@@ -121,6 +121,29 @@ updates. OSV vulnerability data is provided from the OSV database via
 `@renovatebot/osv-offline` (managed locally by the tool) and is not retrieved
 from the npm registry.
 
+### Bot commits on Renovate branches
+
+Renovate treats a branch as modified, and stops rebasing, bumping or
+automerging it, as soon as a commit from another Git author lands on it. The
+org preset lists org bots that legitimately commit on top of Renovate PRs in
+`gitIgnoredAuthors`, so those PRs stay under Renovate's control. Today that is
+`lgtm-digest-bump[bot]`, which pins a freshly built tools-image candidate
+digest on py-lintro Renovate branches. Both its legacy author email and the
+`<bot-user-id>+<login>@users.noreply.github.com` email GitHub assigns to App
+commits created through the API are listed, because Renovate matches the email
+exactly. The bot user id is the bot account's id, not the App id:
+`gh api 'users/<login>' --jq .id`.
+
+Because those branches are updatable again, every rebase drops the bot commit
+and triggers a fresh candidate build. `updateNotScheduled: false` confines
+updates to existing branches (rebases and version bumps) to the preset's
+schedule window. That limits when rebases happen, not how many: a PR usually
+rebases once per window, but can rebase again if the base branch moves between
+two Renovate runs inside it. A package or group with its own `schedule`
+refreshes only in that window. Vulnerability-fix PRs are unaffected, because
+Renovate always ignores `schedule` for them. Dependency Dashboard and PR rebase
+checkboxes bypass the schedule and take effect on the next Renovate run.
+
 ## 📜 License
 
 MIT License — see [LICENSE](LICENSE) for details.
