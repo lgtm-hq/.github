@@ -84,3 +84,26 @@ jq -e '
       )
   )
 ' renovate-config.json
+jq -e '
+  .customManagers as $all
+  | ($all | map(select(.datasourceTemplate == "github-runners"))) as $managers
+  | ($all | map(select(.depNameTemplate == "lgtm-hq/lgtm-ci"))[0].managerFilePatterns)
+    as $workflow_files
+  | ($managers | length) == 1
+  and ($managers[0].customType == "regex")
+  and ($managers[0].matchStringsStrategy == "recursive")
+  and ($managers[0].versioningTemplate == "docker")
+  and ($managers[0].depTypeTemplate == "github-runner")
+  and ($managers[0].packageNameTemplate == "{{depName}}")
+  and ($managers[0].autoReplaceStringTemplate == "{{depName}}-{{newValue}}")
+  and ($managers[0].managerFilePatterns == $workflow_files)
+  and ($managers[0].matchStrings | length) == 2
+  and ($managers[0].matchStrings[0] | test("os\\|runner"))
+  and ($managers[0].matchStrings[0] | test("runs-on"))
+  and ($managers[0].matchStrings[0] | contains("{8,}"))
+  and ($managers[0].matchStrings[1] | test("[(][?]<(depName)>ubuntu"))
+  and ($managers[0].matchStrings[1] | contains("(?<currentValue>"))
+  and ($managers[0].matchStrings[1] | contains("latest") | not)
+' renovate-config.json
+
+bash scripts/ci/validate-matrix-runner-regex.sh
