@@ -308,6 +308,9 @@
       "matchDatasources": [
         "github-runners"
       ],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "github runner images",
       "groupSlug": "github-runner-images"
     },
