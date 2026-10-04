@@ -24,7 +24,7 @@ jq -e '
   and ($runners.key > $majors.key)
   and ($runners.value.groupSlug == "github-runner-images")
   and ($runners.value.groupSlug != $majors.value.groupSlug)
-  and (($runners.value.matchUpdateTypes // []) | index("major") != null)
+  and ($runners.value.matchUpdateTypes == ["major"])
   and ($runners.value.enabled != false)
   and ($runners.value | has("automerge") | not)
   and ($majors.value.groupSlug == "all-major")
