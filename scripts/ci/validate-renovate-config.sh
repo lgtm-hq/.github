@@ -13,6 +13,23 @@ jq -e '
 ' renovate-config.json
 jq -e '.packageRules | type == "array" and length > 0' renovate-config.json
 jq -e '
+  .packageRules as $rules
+  | ($rules | to_entries | map(select(.value.groupName == "all major dependencies")) | first) as $majors
+  | ($rules | to_entries | map(select(
+      ((.value.matchDatasources // []) | index("github-runners") != null)
+      and (.value.groupName == "github runner images")
+    )) | first) as $runners
+  | $majors != null
+  and $runners != null
+  and ($runners.key > $majors.key)
+  and ($runners.value.groupSlug == "github-runner-images")
+  and ($runners.value.groupSlug != $majors.value.groupSlug)
+  and ($runners.value.matchUpdateTypes == ["major"])
+  and ($runners.value.enabled != false)
+  and ($runners.value | has("automerge") | not)
+  and ($majors.value.groupSlug == "all-major")
+' renovate-config.json
+jq -e '
   [.packageRules[]?
    | select(.groupName == "lgtm-ci")
    | select(.automerge == false)
