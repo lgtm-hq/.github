@@ -438,14 +438,14 @@
       ],
       "matchStringsStrategy": "recursive",
       "matchStrings": [
-        "(?:^|\\n)[ \\t]+(?:-[ \\t]+)?(?:os|runner):[ \\t]*\\[?[^\\n]*|(?:^|\\n)[ \\t]{8,}(?:-[ \\t]+)?runs-on:[ \\t]*\\[?[^\\n]*",
-        "(?<depName>ubuntu|macos|windows)-(?<currentValue>\\d+(?:\\.\\d+)?(?:-(?:arm|intel|large|xlarge))?)"
+        "(?:^|\\n)[ \\t]+matrix:[^\\n]*(?:\\n[ \\t]{6,}[^\\n]*)*",
+        "(?<delim>^|[\\s\\[,:'\"])(?<depName>ubuntu|macos|windows)-(?<currentValue>\\d+(?:\\.\\d+)?(?:-(?:arm|intel|large|xlarge))?)(?<trail>[\\s\\]'\",#]|$)"
       ],
       "datasourceTemplate": "github-runners",
       "packageNameTemplate": "{{depName}}",
       "depTypeTemplate": "github-runner",
       "versioningTemplate": "docker",
-      "autoReplaceStringTemplate": "{{depName}}-{{newValue}}"
+      "autoReplaceStringTemplate": "{{delim}}{{depName}}-{{newValue}}{{trail}}"
     }
   ]
 }

@@ -94,16 +94,25 @@ assert_labels(
 )
 
 outside = (TESTDATA / "outside-workflow.yaml").read_text(encoding="utf-8")
-if not extract(outside, line_re, label_re):
-    fail("regex should see runner labels in non-workflow YAML; file pattern excludes it")
+if extract(outside, line_re, label_re):
+    fail("non-workflow YAML without a matrix: block must not match")
+
+edges = (TESTDATA / "edges.yml").read_text(encoding="utf-8")
+assert_labels(
+    "block-list matrix values",
+    extract(edges, line_re, label_re),
+    ["ubuntu-22.04", "macos-14"],
+)
+if "my-ubuntu-22.04-custom" not in edges or "runner: macos-14" not in edges:
+    fail("edges fixture must keep custom-label and env.runner negatives")
 
 negatives = [
     "    runs-on: ${{ matrix.os }}\n",
     "    runs-on: ubuntu-24.04\n",
     "    runs-on: ubuntu-latest\n",
-    "        os: windows-latest\n",
-    "        os: ubuntu-latest-arm\n",
-    "        runner: macos-latest\n",
+    "    strategy:\n      matrix:\n        os: windows-latest\n",
+    "    strategy:\n      matrix:\n        os: ubuntu-latest-arm\n",
+    "    strategy:\n      matrix:\n        runner: macos-latest\n",
 ]
 for sample in negatives:
     found = extract(sample, line_re, label_re)
