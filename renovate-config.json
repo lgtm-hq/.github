@@ -304,6 +304,14 @@
       ]
     },
     {
+      "description": "Keep GitHub runner image updates out of the all-major group",
+      "matchDatasources": [
+        "github-runners"
+      ],
+      "groupName": "github runner images",
+      "groupSlug": "github-runner-images"
+    },
+    {
       "matchDepTypes": [
         "requires-python"
       ],
