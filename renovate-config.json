@@ -439,6 +439,7 @@
       "matchStringsStrategy": "recursive",
       "matchStrings": [
         "(?:^|\\n)[ \\t]+matrix:[^\\n]*(?:\\n[ \\t]{6,}[^\\n]*)*",
+        "(?:^|\\n)[ \\t]+(?:-[ \\t]+)?(?:os|runner|runs-on):[^\\n]*(?:\\n[ \\t]+-[ \\t]+[^\\n]*)*",
         "(?<delim>^|[\\s\\[,:'\"])(?<depName>ubuntu|macos|windows)-(?<currentValue>\\d+(?:\\.\\d+)?(?:-(?:arm|intel|large|xlarge))?)(?<trail>[\\s\\]'\",#]|$)"
       ],
       "datasourceTemplate": "github-runners",

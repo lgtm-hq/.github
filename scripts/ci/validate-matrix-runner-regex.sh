@@ -27,14 +27,20 @@ def to_python_regex(pattern: str) -> str:
     return re.sub(r"\(\?<", "(?P<", pattern)
 
 
-def extract(content: str, line_re: re.Pattern[str], label_re: re.Pattern[str]) -> list[str]:
+def extract(
+    content: str,
+    matrix_re: re.Pattern[str],
+    key_re: re.Pattern[str],
+    label_re: re.Pattern[str],
+) -> list[str]:
     labels: list[str] = []
-    for line_match in line_re.finditer(content):
-        for label_match in label_re.finditer(line_match.group(0)):
-            dep_name = label_match.groupdict().get("depName")
-            current_value = label_match.groupdict().get("currentValue")
-            if dep_name and current_value:
-                labels.append(f"{dep_name}-{current_value}")
+    for matrix_match in matrix_re.finditer(content):
+        for key_match in key_re.finditer(matrix_match.group(0)):
+            for label_match in label_re.finditer(key_match.group(0)):
+                dep_name = label_match.groupdict().get("depName")
+                current_value = label_match.groupdict().get("currentValue")
+                if dep_name and current_value:
+                    labels.append(f"{dep_name}-{current_value}")
     return labels
 
 
@@ -52,9 +58,9 @@ if len(managers) != 1:
     fail("expected exactly one github-runners custom manager")
 manager = managers[0]
 match_strings = manager.get("matchStrings")
-if not isinstance(match_strings, list) or len(match_strings) != 2:
-    fail("github-runners manager must have exactly two matchStrings")
-if "latest" in match_strings[1]:
+if not isinstance(match_strings, list) or len(match_strings) != 3:
+    fail("github-runners manager must have exactly three matchStrings")
+if "latest" in match_strings[2]:
     fail("label regex must not mention latest")
 
 file_patterns = manager.get("managerFilePatterns", [])
@@ -68,22 +74,23 @@ if file_re.search("docker-compose.yml") is not None:
 if file_re.search("scripts/ci/testdata/matrix-runners/outside-workflow.yaml") is not None:
     fail("file pattern must not match testdata outside workflows")
 
-line_re = re.compile(to_python_regex(str(match_strings[0])))
-label_re = re.compile(to_python_regex(str(match_strings[1])))
+matrix_re = re.compile(to_python_regex(str(match_strings[0])))
+key_re = re.compile(to_python_regex(str(match_strings[1])))
+label_re = re.compile(to_python_regex(str(match_strings[2])))
 
 rustume = (TESTDATA / "build-binary.yml").read_text(encoding="utf-8")
 if "windows-latest" not in rustume:
     fail("Rustume fixture must still contain windows-latest as a negative")
 assert_labels(
     "Rustume build-binary.yml",
-    extract(rustume, line_re, label_re),
+    extract(rustume, matrix_re, key_re, label_re),
     ["ubuntu-24.04", "ubuntu-24.04", "macos-15-intel", "macos-14"],
 )
 
 lists = (TESTDATA / "lists-and-nested.yml").read_text(encoding="utf-8")
 assert_labels(
     "lists and nested runs-on",
-    extract(lists, line_re, label_re),
+    extract(lists, matrix_re, key_re, label_re),
     [
         "ubuntu-24.04",
         "macos-14",
@@ -94,16 +101,16 @@ assert_labels(
 )
 
 outside = (TESTDATA / "outside-workflow.yaml").read_text(encoding="utf-8")
-if extract(outside, line_re, label_re):
+if extract(outside, matrix_re, key_re, label_re):
     fail("non-workflow YAML without a matrix: block must not match")
 
 edges = (TESTDATA / "edges.yml").read_text(encoding="utf-8")
 assert_labels(
     "block-list matrix values",
-    extract(edges, line_re, label_re),
+    extract(edges, matrix_re, key_re, label_re),
     ["ubuntu-22.04", "macos-14"],
 )
-if "my-ubuntu-22.04-custom" not in edges or "runner: macos-14" not in edges:
+if "artifact: ubuntu-22.04" not in edges or "runner: macos-14" not in edges:
     fail("edges fixture must keep custom-label and env.runner negatives")
 
 negatives = [
@@ -115,7 +122,7 @@ negatives = [
     "    strategy:\n      matrix:\n        runner: macos-latest\n",
 ]
 for sample in negatives:
-    found = extract(sample, line_re, label_re)
+    found = extract(sample, matrix_re, key_re, label_re)
     if found:
         fail(f"negative sample should not match: {sample!r} -> {found!r}")
 

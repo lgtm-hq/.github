@@ -97,13 +97,14 @@ jq -e '
   and ($managers[0].packageNameTemplate == "{{depName}}")
   and ($managers[0].autoReplaceStringTemplate == "{{delim}}{{depName}}-{{newValue}}{{trail}}")
   and ($managers[0].managerFilePatterns == $workflow_files)
-  and ($managers[0].matchStrings | length) == 2
+  and ($managers[0].matchStrings | length) == 3
   and ($managers[0].matchStrings[0] | contains("matrix:"))
-  and ($managers[0].matchStrings[1] | contains("(?<delim>"))
-  and ($managers[0].matchStrings[1] | contains("(?<trail>"))
-  and ($managers[0].matchStrings[1] | test("[(][?]<(depName)>ubuntu"))
-  and ($managers[0].matchStrings[1] | contains("(?<currentValue>"))
-  and ($managers[0].matchStrings[1] | contains("latest") | not)
+  and ($managers[0].matchStrings[1] | test("os\\|runner\\|runs-on"))
+  and ($managers[0].matchStrings[2] | contains("(?<delim>"))
+  and ($managers[0].matchStrings[2] | contains("(?<trail>"))
+  and ($managers[0].matchStrings[2] | test("[(][?]<(depName)>ubuntu"))
+  and ($managers[0].matchStrings[2] | contains("(?<currentValue>"))
+  and ($managers[0].matchStrings[2] | contains("latest") | not)
 ' renovate-config.json
 
 bash scripts/ci/validate-matrix-runner-regex.sh

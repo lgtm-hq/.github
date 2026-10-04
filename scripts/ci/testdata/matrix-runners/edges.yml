@@ -28,5 +28,6 @@ jobs:
     strategy:
       matrix:
         runner: my-ubuntu-22.04-custom
+        artifact: ubuntu-22.04
     steps:
       - run: echo skip
