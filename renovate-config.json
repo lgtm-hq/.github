@@ -429,6 +429,24 @@
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
       "autoReplaceStringTemplate": "ref: \"{{newDigest}}\" # {{newVersion}}"
+    },
+    {
+      "description": "Detect GitHub-hosted runner labels in workflow matrices (native manager only reads literal runs-on)",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "(?:^|\\n)[ \\t]+matrix:[^\\n]*(?:\\n[ \\t]{6,}[^\\n]*)*",
+        "(?:^|\\n)[ \\t]+(?:-[ \\t]+)?(?:os|runner|runs-on):[^\\n]*(?:\\n[ \\t]+-[ \\t]+[^\\n]*)*",
+        "(?<delim>^|[\\s\\[,:'\"])(?<depName>ubuntu|macos|windows)-(?<currentValue>\\d+(?:\\.\\d+)?(?:-(?:arm|intel|large|xlarge))?)(?<trail>[\\s\\]'\",#]|$)"
+      ],
+      "datasourceTemplate": "github-runners",
+      "packageNameTemplate": "{{depName}}",
+      "depTypeTemplate": "github-runner",
+      "versioningTemplate": "docker",
+      "autoReplaceStringTemplate": "{{delim}}{{depName}}-{{newValue}}{{trail}}"
     }
   ]
 }
