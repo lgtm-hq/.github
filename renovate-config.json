@@ -36,6 +36,7 @@
   "semanticCommits": "enabled",
   "semanticCommitType": "chore",
   "semanticCommitScope": "deps",
+  "platformAutomerge": false,
   "packageRules": [
     {
       "matchManagers": [
