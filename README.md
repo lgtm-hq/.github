@@ -151,10 +151,11 @@ label on the PR, or it must land in a separate PR.
 `updateNotScheduled: false` confines updates to existing branches (rebases and
 version bumps) to the preset's schedule window. That limits when rebases happen,
 not how many: a PR usually rebases once per window, but can rebase again if the
-base branch moves between two Renovate runs inside it. A package or group with its own `schedule`
-refreshes only in that window. Vulnerability-fix PRs are unaffected, because
-Renovate always ignores `schedule` for them. Dependency Dashboard and PR rebase
-checkboxes bypass the schedule and take effect on the next Renovate run.
+base branch moves between two Renovate runs inside it. A package or group with
+its own `schedule` refreshes only in that window. Vulnerability-fix PRs are
+unaffected, because Renovate always ignores `schedule` for them. Dependency
+Dashboard and PR rebase checkboxes bypass the schedule and take effect on the
+next Renovate run.
 
 ## 📜 License
 
