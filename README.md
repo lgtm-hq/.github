@@ -126,9 +126,16 @@ from the npm registry.
 Renovate treats a branch as modified, and stops rebasing, bumping or
 automerging it, as soon as a commit from another Git author lands on it. The
 org preset lists org bots that legitimately commit on top of Renovate PRs in
-`gitIgnoredAuthors`, so those PRs stay under Renovate's control. Today that is
-`lgtm-digest-bump[bot]`, which pins a freshly built tools-image candidate
-digest on py-lintro Renovate branches. Both its legacy author email and the
+`gitIgnoredAuthors`, so those PRs stay under Renovate's control. Today those
+are:
+
+- `lgtm-digest-bump[bot]`, which pins a freshly built tools-image candidate
+  digest on py-lintro Renovate branches.
+- `lgtm-ai-bot[bot]`, the org automation identity that pushes follow-up commits
+  onto Renovate branches (regenerated artifacts, review fixes, signed CI
+  re-trigger commits).
+
+For each bot, both its legacy author email and the
 `<bot-user-id>+<login>@users.noreply.github.com` email GitHub assigns to App
 commits created through the API are listed, because Renovate matches the email
 exactly. The bot user id is the bot account's id, not the App id:
