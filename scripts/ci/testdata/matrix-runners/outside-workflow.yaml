@@ -1,0 +1,5 @@
+---
+# Not a GitHub Actions workflow. The file-pattern gate must reject this path.
+services:
+  os: ubuntu-24.04
+  runner: macos-14

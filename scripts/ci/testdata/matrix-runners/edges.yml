@@ -1,0 +1,33 @@
+---
+name: Matrix edge cases
+
+"on":
+  workflow_dispatch:
+
+jobs:
+  block_list:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          - macos-14
+    steps:
+      - run: echo ok
+
+  env_not_matrix:
+    runs-on: ubuntu-24.04
+    env:
+      runner: macos-14
+      os: windows-2022
+    steps:
+      - run: echo skip
+
+  custom_label:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        runner: my-ubuntu-22.04-custom
+        artifact: ubuntu-22.04
+    steps:
+      - run: echo skip
