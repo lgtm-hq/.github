@@ -8,7 +8,7 @@ name: PR - All Checks Gate
 
 'on':
   pull_request:
-    # `edited` too: PR - Title Validation re-runs on title edits.
+    # Re-evaluate after title/body/base edits as well as code changes.
     types: [opened, edited, synchronize, reopened, ready_for_review]
   merge_group:
 
