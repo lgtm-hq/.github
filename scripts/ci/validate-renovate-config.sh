@@ -12,41 +12,8 @@ jq -e '
   and (.vulnerabilityAlerts.automerge == false)
 ' renovate-config.json
 
-# Exercise the runner manager with workflow content, using the same named
-# captures as Renovate. Keep fixture labels independent of the production
-# runner default so extraction coverage survives future image bumps.
-jq -e --rawfile workflow tests/fixtures/renovate/runner-images.yml '
-  [.customManagers[]? | select(.datasourceTemplate == "github-runners")] as $managers
-  | $managers[0] as $manager
-  | ($managers | length) == 1
-  and ($manager.customType == "regex")
-  and ($manager.depNameTemplate == "ubuntu")
-  and ($manager.description | length > 0)
-  and ($manager.matchStrings | length == 2)
-  and (
-    [".github/workflows/ci.yml", ".github/workflows/ci.yaml"]
-    | all(. as $path | any($manager.managerFilePatterns[];
-        .[1:-1] as $pattern | $path | test($pattern)))
-  )
-  and (
-    ["README.md", "renovate.json", "examples/ci.yml",
-     "tests/fixtures/renovate/runner-images.yml", ".github/workflows/ci.yml.bak"]
-    | all(. as $path | all($manager.managerFilePatterns[];
-        .[1:-1] as $pattern | $path | test($pattern) | not))
-  )
-  and (
-    [$manager.matchStrings[] as $pattern
-     | $workflow | capture($pattern; "g")
-     | [$manager.depNameTemplate, $manager.datasourceTemplate, .currentValue]]
-    | sort == [
-        ["ubuntu", "github-runners", "24.04"],
-        ["ubuntu", "github-runners", "26.04"],
-        ["ubuntu", "github-runners", "26.04"],
-        ["ubuntu", "github-runners", "28.04"],
-        ["ubuntu", "github-runners", "28.04"]
-      ]
-  )
-' renovate-config.json
+# Exercise runner extraction with JavaScript regexes and fixture workflows.
+node --test tests/renovate-runner-images.test.cjs
 jq -e '.packageRules | type == "array" and length > 0' renovate-config.json
 jq -e '
   .packageRules as $rules

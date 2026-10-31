@@ -431,14 +431,27 @@
       "autoReplaceStringTemplate": "ref: \"{{newDigest}}\" # {{newVersion}}"
     },
     {
-      "description": "Track shared runner expression fallbacks and runner-image overrides (not visible to github-actions manager)",
+      "description": "Track shared runner expression fallbacks (not visible to github-actions manager)",
       "customType": "regex",
       "managerFilePatterns": [
         "/^\\.github/workflows/.*\\.ya?ml$/"
       ],
       "matchStrings": [
-        "vars\\.LGTM_CI_RUNNER\\s*\\|\\|\\s*'ubuntu-(?<currentValue>\\d+\\.\\d+)'",
-        "runner-image:\\s*['\"]?ubuntu-(?<currentValue>\\d+\\.\\d+)['\"]?"
+        "vars\\.LGTM_CI_RUNNER\\s*\\|\\|\\s*'ubuntu-(?<currentValue>\\d+\\.\\d+)'"
+      ],
+      "datasourceTemplate": "github-runners",
+      "depNameTemplate": "ubuntu"
+    },
+    {
+      "description": "Track complete runner-image overrides in job-level with blocks (two-space YAML indentation)",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "matchStringsStrategy": "recursive",
+      "matchStrings": [
+        "(?:^|\\r?\\n)    with:(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*\\r?\\n(?:      [A-Za-z_][A-Za-z0-9_-]*:[^\\r\\n]*\\r?\\n|[ \\t]*(?:#[^\\r\\n]*)?\\r?\\n)*?      runner-image:[ \\t]*['\"]?ubuntu-\\d+\\.\\d+['\"]?(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*(?:\\r?\\n|$)",
+        "(?:^|\\r?\\n)      runner-image:[ \\t]*['\"]?ubuntu-(?<currentValue>\\d+\\.\\d+)"
       ],
       "datasourceTemplate": "github-runners",
       "depNameTemplate": "ubuntu"

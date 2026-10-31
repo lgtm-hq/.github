@@ -55,15 +55,17 @@ fallback:
 runs-on: ${{ vars.LGTM_CI_RUNNER || 'ubuntu-26.04' }}
 ```
 
-`LGTM_CI_RUNNER` currently selects `ubuntu-26.04` and is visible only to
-`agent-infra`; other repositories use the literal fallback. The Blacksmith
-runner label, when selected, is `blacksmith-2vcpu-ubuntu-2604`.
+`LGTM_CI_RUNNER` overrides the fallback when the variable is available to the
+repository and has a value; otherwise, the job uses the pinned fallback.
 
 The shared preset tracks the Ubuntu fallback in this expression and explicit
 `with: runner-image: ubuntu-*` values in `.github/workflows/*.yml` and
 `*.yaml`. Both use the `github-runners` datasource and dependency name `ubuntu`,
 so they update alongside literal `runs-on: ubuntu-*` labels in the same runner
-image PR. Reusable workflow input defaults are maintained by lgtm-ci.
+image PR. Override extraction covers complete `ubuntu-NN.NN` labels in
+job-level `with` blocks using two-space YAML indentation. Comments, scripts,
+and suffixed runner labels are excluded. Reusable workflow input defaults
+are maintained by lgtm-ci.
 
 ## GitHub Actions SHA Pinning + Renovate
 
