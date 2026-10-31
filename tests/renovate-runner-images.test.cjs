@@ -101,29 +101,51 @@ function runnerValue(expression, version) {
 // Keep parser-disputed YAML as text here: formatters must not normalize the
 // six-space continuation into a supported shape. PyYAML 6.0.3 accepts it as
 // scalar content; yaml 2.9.1 reports MISSING_CHAR / MULTILINE_IMPLICIT_KEY.
-function quotedInput({ expression, quote, indent, actual, prefix = "" }) {
+function quotedInput({ expression, quote, indent, actual, prefix = "", escapedBreak = false }) {
   const escape = (value) => (quote === "'" ? value.replaceAll("'", "''") : value);
   const fake = escape(runnerValue(expression, "24.04"));
+  const continuation = escapedBreak ? "\\" : "";
   return [
     "jobs:",
     "  a:",
     "    with:",
-    `      script: ${prefix}${quote}hello`,
-    `${" ".repeat(indent)}runner-image: ${fake}`,
+    `      script: ${prefix}${quote}hello${continuation}`,
+    `${" ".repeat(indent)}runner-image: ${fake}${continuation}`,
     `${" ".repeat(indent)}end${quote}`,
     ...(actual ? [`      runner-image: ${runnerValue(expression, "26.04")}`] : []),
     "",
   ].join("\n");
 }
 
-test("JS fallback bounds failed with-block searches without blocking the test runner", () => {
+// PyYAML 6.0.3 parses four-space continuations as job metadata; yaml 2.9.1
+// disputes this form. Keep it as source text so formatters cannot reindent it.
+// Unlike the six-space input-key guard above, this is a job field: consuming
+// the whole quoted field must still let the following real selection update.
+function quotedJobMetadata({ expression, quote, key, selection, actual }) {
+  const escape = (value) => (quote === "'" ? value.replaceAll("'", "''") : value);
+  const select = (version) =>
+    selection === "runs-on"
+      ? [`    runs-on: ${runnerValue(expression, version)}`]
+      : ["    with:", `      runner-image: ${runnerValue(expression, version)}`];
+  return [
+    "jobs:",
+    "  a:",
+    `    ${key}: ${quote}hello`,
+    ...select("24.04").map(escape),
+    `    end${quote}`,
+    ...(actual ? select("26.04") : []),
+    "",
+  ].join("\n");
+}
+
+test("JS fallback bounds failed scalar and with-block searches without blocking the test runner", () => {
   // A timeout in node:test cannot interrupt a synchronous regex. Run the actual
   // configured intermediate patterns in a child that the parent can kill.
   const probe = `
     const { readFileSync } = require('node:fs');
-    const patterns = JSON.parse(readFileSync(0, 'utf8'));
+    const { fields, selections } = JSON.parse(readFileSync(0, 'utf8'));
     const results = [];
-    for (const pattern of patterns) {
+    for (const pattern of selections) {
       for (const ending of ['\\n', '\\r\\n']) {
         for (const count of [24, 48, 256]) {
           const lines = [
@@ -138,17 +160,33 @@ test("JS fallback bounds failed with-block searches without blocking the test ru
         }
       }
     }
+    for (const pattern of fields) {
+      for (const ending of ['\\n', '\\r\\n']) {
+        for (const count of [24, 48, 256]) {
+          const lines = [
+            '    name: "hello' + String.fromCharCode(92),
+            ...Array(count).fill('    continued' + String.fromCharCode(92)),
+            ...Array(count).fill('        '),
+            '    missing closing quote',
+          ];
+          results.push(new RegExp(pattern, 'g').test(lines.join(ending)));
+        }
+      }
+    }
     process.stdout.write(JSON.stringify(results));
   `;
   const child = spawnSync(process.execPath, ["-e", probe], {
-    input: JSON.stringify(managers.map((manager) => manager.matchStrings[1])),
+    input: JSON.stringify({
+      fields: managers.map((manager) => manager.matchStrings[1]),
+      selections: managers.map((manager) => manager.matchStrings[2]),
+    }),
     encoding: "utf8",
     timeout: 3000,
     killSignal: "SIGKILL",
   });
   assert.ifError(child.error);
   assert.equal(child.status, 0, child.stderr);
-  assert.deepEqual(JSON.parse(child.stdout), Array(12).fill(false));
+  assert.deepEqual(JSON.parse(child.stdout), Array(24).fill(false));
 });
 
 test("runner managers retain recursive scoping and the built-in runner group", () => {
@@ -157,7 +195,9 @@ test("runner managers retain recursive scoping and the built-in runner group", (
     assert.equal(manager.customType, "regex");
     assert.ok(manager.description.length > 0);
     assert.equal(manager.matchStringsStrategy, "recursive");
-    assert.equal(manager.matchStrings.length, 3);
+    // Tokenize job fields before recognizing selections, so quoted metadata
+    // containing apparent runs-on / with keys is never searched as job YAML.
+    assert.equal(manager.matchStrings.length, 4);
     assert.equal(manager.autoReplaceStringTemplate, undefined);
     assert.equal(manager.versioningTemplate, undefined);
   }
@@ -205,6 +245,84 @@ for (const [ending, content] of [
     if (ending === "CRLF") return input.replaceAll("\n", "\r\n");
     return ending === "no final newline" ? input.trimEnd() : input;
   };
+
+  test(`exclude quoted job metadata while retaining real selections (${ending})`, () => {
+    for (const [selection, expression] of [
+      ["runs-on", true],
+      ["runner-image", false],
+      ["runner-image", true],
+    ]) {
+      for (const quote of ['"', "'"]) {
+        for (const key of ["name", '"name"', "'name'"]) {
+          const manager = managers[expression ? 0 : 1];
+          for (const actual of [false, true]) {
+            for (const intro of ["hello", "hello\n", "hello\\"]) {
+              const input = lineEndings(
+                quotedJobMetadata({ expression, quote, key, selection, actual }).replace(
+                  "hello\n",
+                  `${intro}\n`,
+                ),
+              );
+              assert.deepEqual(
+                managers.flatMap((candidate) => extract(input, candidate)).map(identity),
+                actual ? [["ubuntu", "github-runners", "26.04"]] : [],
+                JSON.stringify({ selection, expression, quote, key, actual, intro }),
+              );
+              if (actual) {
+                assert.equal(
+                  update(input, manager, 0, "30.04").content,
+                  input.replace("ubuntu-26.04", "ubuntu-30.04"),
+                );
+              }
+            }
+          }
+          const metadata = lineEndings(
+            quotedJobMetadata({ expression, quote, key, selection, actual: false }),
+          );
+          const target = lineEndings(
+            `\n  target:\n${selection === "runs-on" ? "" : "    with:\n"}${selection === "runs-on" ? "    runs-on" : "      runner-image"}: ${runnerValue(expression, "24.04")}\n`,
+          );
+          const after = metadata.replace("jobs:", "").replace("  a:", "  after:");
+          const collision = `${metadata}${target}\n${after}`;
+          const result = update(collision, manager, 0, "30.04");
+          assert.equal(
+            result.content,
+            `${metadata}${target.replace("ubuntu-24.04", "ubuntu-30.04")}\n${after}`,
+          );
+          if (quote === '"' || !expression) {
+            assert.deepEqual(
+              result.attempts.map((attempt) => attempt.accepted),
+              [false, true],
+            );
+          }
+        }
+      }
+    }
+  });
+
+  test(`track overrides after quoted inputs with escaped line breaks (${ending})`, () => {
+    for (const expression of [false, true]) {
+      for (const indent of [7, 8]) {
+        const input = lineEndings(
+          quotedInput({
+            expression,
+            quote: '"',
+            indent,
+            actual: true,
+            escapedBreak: true,
+          }),
+        );
+        const manager = managers[expression ? 0 : 1];
+        assert.deepEqual(managers.flatMap((candidate) => extract(input, candidate)).map(identity), [
+          ["ubuntu", "github-runners", "26.04"],
+        ]);
+        assert.equal(
+          update(input, manager, 0, "30.04").content,
+          input.replace("ubuntu-26.04", "ubuntu-30.04"),
+        );
+      }
+    }
+  });
 
   test(`skip unsupported quoted continuations and preserve their text (${ending})`, () => {
     for (const expression of [false, true]) {
