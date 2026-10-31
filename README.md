@@ -43,8 +43,53 @@ See [GitHub's documentation on default community health files][docs] for details
 
 <!-- Reference URL is intentionally unwrapped for readability. -->
 <!-- markdownlint-disable MD013 -->
+
 [docs]: https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file
+
 <!-- markdownlint-enable MD013 -->
+
+### Shared runner expression
+
+Consumer-owned jobs can use the organization runner variable with a pinned
+fallback:
+
+```yaml
+runs-on: ${{ vars.LGTM_CI_RUNNER || 'ubuntu-26.04' }}
+```
+
+`LGTM_CI_RUNNER` overrides the fallback when the variable is available to the
+repository and has a value; otherwise, the job uses the pinned fallback.
+
+The shared preset tracks these single-line runner selections in valid workflows
+under `.github/workflows/*.yml` and `*.yaml`, using two-space YAML indentation
+(`jobs` at column zero, job keys at two spaces):
+
+- A job's `runs-on:` at four spaces with the complete, unquoted YAML expression
+  `${{ vars.LGTM_CI_RUNNER || 'ubuntu-NN.NN' }}`. Horizontal whitespace inside
+  the expression is optional; additional operators or string content are
+  excluded.
+- A job-level `with:` at four spaces with `runner-image:` at six spaces, using
+  either that same expression or a complete `ubuntu-NN.NN` label. Literal labels
+  may be unquoted, single-quoted, or double-quoted. Earlier inputs may have
+  quoted keys or deeper-indented multiline bodies. Quoted scalar continuations
+  must have at least seven leading spaces through the closing quote. If an
+  earlier quoted scalar continues at six spaces or fewer, extraction skips that
+  `with:` block, including any real runner override after it. This conservative
+  rule applies even when a YAML parser accepts the shallower continuation.
+
+Both forms allow trailing YAML comments. Fallback expressions and literal input
+overrides exclude commented-out keys, scripts, unrelated strings, `env` values,
+and suffixed runner labels. Step-level inputs, quoted runner selection keys,
+quoted YAML expressions, other indentation styles, and reusable workflow input
+defaults are outside this custom extraction scope. Earlier inputs with flow
+collections, anchors, tags, or sequences at the key's indentation are also
+unsupported and can prevent extraction. Input defaults are maintained by lgtm-ci.
+
+Both custom managers use the built-in `github-runners` datasource and dependency
+name `ubuntu`, so they update alongside literal `runs-on: ubuntu-*` labels in
+the same runner image PR. Replacement revalidates the extracted dependency at
+each candidate occurrence: identical text in `env` or scripts is rejected and
+the search continues to the actual runner selection.
 
 ## GitHub Actions SHA Pinning + Renovate
 

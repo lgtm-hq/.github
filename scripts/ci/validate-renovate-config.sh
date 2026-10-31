@@ -84,3 +84,6 @@ jq -e '
       )
   )
 ' renovate-config.json
+
+# Exercise runner extraction with JavaScript regexes and fixture workflows.
+node --test tests/renovate-runner-images.test.cjs
