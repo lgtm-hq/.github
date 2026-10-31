@@ -142,14 +142,15 @@ test("JS fallback bounds failed scalar and with-block searches without blocking 
   // A timeout in node:test cannot interrupt a synchronous regex. Run the actual
   // configured intermediate patterns in a child that the parent can kill.
   const probe = `
+    const assert = require('node:assert/strict');
     const { readFileSync } = require('node:fs');
     const { fields, selections } = JSON.parse(readFileSync(0, 'utf8'));
     const results = [];
-    for (const pattern of selections) {
+    for (const { pattern, override } of selections) {
       for (const ending of ['\\n', '\\r\\n']) {
         for (const count of [24, 48, 256]) {
           const lines = [
-            'jobs:', '  a:', '    with:', '      script: |',
+            '    with:', '      script: |',
             ...Array(count).fill("        # runner-image: \${{ vars.LGTM_CI_RUNNER || 'ubuntu-24.04' }}"),
             ...Array(count).fill('        '),
             '      runner-image: ubuntu-24.04-custom',
@@ -157,6 +158,12 @@ test("JS fallback bounds failed scalar and with-block searches without blocking 
             '',
           ];
           results.push(new RegExp(pattern, 'g').test(lines.join(ending)));
+          const positive = [
+            ...lines.slice(0, -1),
+            '      runner-image: ' + override,
+            '',
+          ].join(ending);
+          assert.equal(new RegExp(pattern, 'g').exec(positive)?.[0], positive);
         }
       }
     }
@@ -178,7 +185,10 @@ test("JS fallback bounds failed scalar and with-block searches without blocking 
   const child = spawnSync(process.execPath, ["-e", probe], {
     input: JSON.stringify({
       fields: managers.map((manager) => manager.matchStrings[1]),
-      selections: managers.map((manager) => manager.matchStrings[2]),
+      selections: managers.map((manager, index) => ({
+        pattern: manager.matchStrings[2],
+        override: runnerValue(index === 0, "26.04"),
+      })),
     }),
     encoding: "utf8",
     timeout: 3000,
