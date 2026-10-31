@@ -8,16 +8,36 @@ const managers = config.customManagers.filter((manager) => {
   const isRunner = manager.datasourceTemplate === "github-runners";
   return isRunner && manager.depNameTemplate === "ubuntu";
 });
+const expectedValues = {
+  expression: "26.04",
+  "compact-expression": "28.04",
+  "unquoted-override": "24.04",
+  "single-quoted-override": "26.04",
+  "multiline-before-override": "24.04",
+  "quoted-siblings-before-override": "24.04",
+  "continued-before-override": "24.04",
+  "expression-input": "26.04",
+  "collision-target": "24.04",
+  "double-quoted-override": "28.04",
+};
 const expected = [
-  ["ubuntu", "github-runners", "26.04"],
-  ["ubuntu", "github-runners", "28.04"],
-  ["ubuntu", "github-runners", "24.04"],
-  ["ubuntu", "github-runners", "26.04"],
-  ["ubuntu", "github-runners", "28.04"],
-];
+  // Expression manager: runs-on and reusable workflow inputs.
+  "26.04",
+  "28.04",
+  "26.04",
+  // Literal runner-image manager.
+  "24.04",
+  "26.04",
+  "24.04",
+  "24.04",
+  "24.04",
+  "24.04",
+  "28.04",
+].map((value) => ["ubuntu", "github-runners", value]);
 
-// Use JavaScript global matching, including Renovate's recursive narrowing.
-// This fixture test does not perform Renovate schema validation or lookups.
+// Renovate 44.198.3 custom/regex/strategies: global matching at each level;
+// recursive extraction uses the final match, not its parent, as replaceString.
+// This test uses JS regexes and does not perform schema validation or lookups.
 function extract(content, manager, index = 0) {
   const dependencies = [];
   const pattern = new RegExp(manager.matchStrings[index], "g");
@@ -36,20 +56,59 @@ function extract(content, manager, index = 0) {
   return dependencies;
 }
 
+// Value-only path from Renovate 44.198.3 update/branch/auto-replace:
+// autoReplaceGlobalMatch defaults to true WITHIN replaceString. File occurrences
+// are tried individually, re-extracting at depIndex and rolling back failures
+// before continuing. It does not replaceAll(replaceString) across the file.
+function update(content, manager, depIndex, newValue) {
+  const dependency = extract(content, manager)[depIndex];
+  const { replaceString, currentValue, depName } = dependency;
+  const escapedValue = currentValue.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const newString = replaceString.replace(new RegExp(escapedValue, "g"), newValue);
+  const attempts = [];
+  const start = content.indexOf(replaceString);
+  if (start === -1) return { content, attempts };
+  for (let index = start; index < content.length; index += 1) {
+    if (!content.startsWith(replaceString, index)) continue;
+    const candidate =
+      content.slice(0, index) + newString + content.slice(index + replaceString.length);
+    const extracted = extract(candidate, manager)[depIndex];
+    const accepted = extracted?.depName === depName && extracted.currentValue === newValue;
+    attempts.push({ index, accepted });
+    if (accepted) return { content: candidate, attempts };
+  }
+  throw new Error("No candidate updated the extracted runner dependency");
+}
+
 function identity(dependency) {
   return [dependency.depName, dependency.datasource, dependency.currentValue];
 }
 
-test("Ubuntu expression and recursive override managers are configured", () => {
+// Split only the fixture's job keys, preserving the header and all job text.
+function fixtureParts(content) {
+  return content.split(/(?=^ {2}[a-z][a-z0-9-]*:\r?$)/m);
+}
+
+function jobName(part) {
+  return /^ {2}([a-z][a-z0-9-]*):/.exec(part)?.[1];
+}
+
+test("runner managers retain recursive scoping and the built-in runner group", () => {
   assert.equal(managers.length, 2, "Expected two Ubuntu runner custom managers");
-  const strategies = managers.map((manager) => manager.matchStringsStrategy ?? "any");
-  assert.deepEqual(strategies.sort(), ["any", "recursive"]);
   for (const manager of managers) {
     assert.equal(manager.customType, "regex");
     assert.ok(manager.description.length > 0);
-    const count = manager.matchStringsStrategy === "recursive" ? 2 : 1;
-    assert.equal(manager.matchStrings.length, count);
+    assert.equal(manager.matchStringsStrategy, "recursive");
+    assert.equal(manager.matchStrings.length, 3);
+    assert.equal(manager.autoReplaceStringTemplate, undefined);
+    assert.equal(manager.versioningTemplate, undefined);
   }
+  const groups = config.packageRules.filter((rule) =>
+    rule.matchDatasources?.includes("github-runners"),
+  );
+  assert.equal(groups.length, 1);
+  assert.equal(groups[0].groupName, "github runner images");
+  assert.equal(groups[0].groupSlug, "github-runner-images");
 });
 
 test("runner managers select only workflow YAML paths", () => {
@@ -84,22 +143,74 @@ for (const [ending, content] of [
   ["CRLF", workflow.replaceAll("\n", "\r\n")],
   ["no final newline", workflow.trimEnd()],
 ]) {
-  test(`extract only complete Ubuntu inputs and fallbacks (${ending})`, () => {
+  test(`extract only complete Ubuntu selections (${ending})`, () => {
     const dependencies = managers.flatMap((manager) => extract(content, manager));
     assert.deepEqual(dependencies.map(identity), expected);
+  });
 
-    const override = dependencies.find((dep) => dep.currentValue === "24.04");
-    const updated = content.replace(
-      override.replaceString,
-      override.replaceString.replaceAll(override.currentValue, "30.04"),
-    );
+  test(`check each positive and negative fixture independently (${ending})`, () => {
+    let positiveCount = 0;
+    for (const part of fixtureParts(content)) {
+      const name = jobName(part);
+      const input = name ? `jobs:\n${part}` : part;
+      const dependencies = managers.flatMap((manager) => extract(input, manager));
+      const value = expectedValues[name];
+      const wanted = value ? [["ubuntu", "github-runners", value]] : [];
+      assert.deepEqual(dependencies.map(identity), wanted, name ?? "header");
+      if (value) positiveCount += 1;
+    }
+    assert.equal(positiveCount, Object.keys(expectedValues).length);
+  });
+
+  test(`update all selections while preserving unrelated same-value text (${ending})`, () => {
+    let updated = content;
+    for (const manager of managers) {
+      const dependencies = extract(content, manager);
+      for (let depIndex = 0; depIndex < dependencies.length; depIndex += 1) {
+        updated = update(updated, manager, depIndex, "30.04").content;
+      }
+    }
+    const wanted = fixtureParts(content)
+      .map((part) => {
+        if (!expectedValues[jobName(part)]) return part;
+        return part.replace(
+          /^( {4}runs-on| {6}runner-image):([^\r\n]*?)ubuntu-\d+\.\d+/gm,
+          "$1:$2ubuntu-30.04",
+        );
+      })
+      .join("");
     assert.equal(
       updated,
-      content.replace(
+      wanted,
+      "Only actual selections may change; preserve siblings, comments, env and scripts",
+    );
+    assert.ok(
+      managers
+        .flatMap((manager) => extract(updated, manager))
+        .every((dep) => dep.currentValue === "30.04"),
+    );
+  });
+
+  test(`reject an env collision, continue to the override and leave later env alone (${ending})`, () => {
+    const parts = fixtureParts(content).filter((part) =>
+      ["collision-before", "collision-target", "collision-after"].includes(jobName(part)),
+    );
+    const collision = `jobs:\n${parts.join("")}`;
+    const manager = managers[1];
+    const [override] = extract(collision, manager);
+    // All three lines have byte-for-byte identical replaceString text.
+    assert.equal(collision.split(override.replaceString).length - 1, 3);
+    const result = update(collision, manager, 0, "30.04");
+    assert.deepEqual(
+      result.attempts.map((attempt) => attempt.accepted),
+      [false, true],
+    );
+    assert.equal(
+      result.content,
+      collision.replace(
         "runner-image: ubuntu-24.04 # Keep 24.04 in this comment.",
         "runner-image: ubuntu-30.04 # Keep 24.04 in this comment.",
       ),
-      "Updating the input must preserve sibling values, comments and script content",
     );
   });
 }

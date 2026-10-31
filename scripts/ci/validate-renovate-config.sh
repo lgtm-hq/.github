@@ -11,9 +11,6 @@ jq -e '
   and (.vulnerabilityAlerts.commitMessageSuffix == "[SECURITY]")
   and (.vulnerabilityAlerts.automerge == false)
 ' renovate-config.json
-
-# Exercise runner extraction with JavaScript regexes and fixture workflows.
-node --test tests/renovate-runner-images.test.cjs
 jq -e '.packageRules | type == "array" and length > 0' renovate-config.json
 jq -e '
   .packageRules as $rules
@@ -87,3 +84,6 @@ jq -e '
       )
   )
 ' renovate-config.json
+
+# Exercise runner extraction with JavaScript regexes and fixture workflows.
+node --test tests/renovate-runner-images.test.cjs

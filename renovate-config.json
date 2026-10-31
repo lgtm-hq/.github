@@ -431,13 +431,16 @@
       "autoReplaceStringTemplate": "ref: \"{{newDigest}}\" # {{newVersion}}"
     },
     {
-      "description": "Track shared runner expression fallbacks (not visible to github-actions manager)",
+      "description": "Track complete shared runner expressions in job runs-on and job-level runner-image inputs (two-space YAML indentation)",
       "customType": "regex",
       "managerFilePatterns": [
         "/^\\.github/workflows/.*\\.ya?ml$/"
       ],
+      "matchStringsStrategy": "recursive",
       "matchStrings": [
-        "vars\\.LGTM_CI_RUNNER\\s*\\|\\|\\s*'ubuntu-(?<currentValue>\\d+\\.\\d+)'"
+        "(?:^|\\r?\\n)jobs:(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*\\r?\\n(?:[ \\t]*(?:#[^\\r\\n]*)?\\r?\\n| [^\\r\\n]*(?:\\r?\\n|$))*",
+        "(?:^|\\r?\\n)    runs-on:[ \\t]*\\$\\{\\{[ \\t]*vars\\.LGTM_CI_RUNNER[ \\t]*\\|\\|[ \\t]*'ubuntu-\\d+\\.\\d+'[ \\t]*\\}\\}(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*(?:\\r?\\n|$)|(?:^|\\r?\\n)    with:(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*\\r?\\n(?:      [\"']?[A-Za-z_][A-Za-z0-9_-]*[\"']?:[^\\r\\n]*\\r?\\n|       [^\\r\\n]*\\r?\\n|[ \\t]*(?:#[^\\r\\n]*)?\\r?\\n)*?      runner-image:[ \\t]*\\$\\{\\{[ \\t]*vars\\.LGTM_CI_RUNNER[ \\t]*\\|\\|[ \\t]*'ubuntu-\\d+\\.\\d+'[ \\t]*\\}\\}(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*(?:\\r?\\n|$)",
+        "(?:^|\\r?\\n)(?:    runs-on|      runner-image):[ \\t]*\\$\\{\\{[ \\t]*vars\\.LGTM_CI_RUNNER[ \\t]*\\|\\|[ \\t]*'ubuntu-(?<currentValue>\\d+\\.\\d+)"
       ],
       "datasourceTemplate": "github-runners",
       "depNameTemplate": "ubuntu"
@@ -450,7 +453,8 @@
       ],
       "matchStringsStrategy": "recursive",
       "matchStrings": [
-        "(?:^|\\r?\\n)    with:(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*\\r?\\n(?:      [A-Za-z_][A-Za-z0-9_-]*:[^\\r\\n]*\\r?\\n|[ \\t]*(?:#[^\\r\\n]*)?\\r?\\n)*?      runner-image:[ \\t]*['\"]?ubuntu-\\d+\\.\\d+['\"]?(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*(?:\\r?\\n|$)",
+        "(?:^|\\r?\\n)jobs:(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*\\r?\\n(?:[ \\t]*(?:#[^\\r\\n]*)?\\r?\\n| [^\\r\\n]*(?:\\r?\\n|$))*",
+        "(?:^|\\r?\\n)    with:(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*\\r?\\n(?:      [\"']?[A-Za-z_][A-Za-z0-9_-]*[\"']?:[^\\r\\n]*\\r?\\n|       [^\\r\\n]*\\r?\\n|[ \\t]*(?:#[^\\r\\n]*)?\\r?\\n)*?      runner-image:[ \\t]*['\"]?ubuntu-\\d+\\.\\d+['\"]?(?:[ \\t]+#[^\\r\\n]*)?[ \\t]*(?:\\r?\\n|$)",
         "(?:^|\\r?\\n)      runner-image:[ \\t]*['\"]?ubuntu-(?<currentValue>\\d+\\.\\d+)"
       ],
       "datasourceTemplate": "github-runners",
