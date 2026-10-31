@@ -71,14 +71,19 @@ under `.github/workflows/*.yml` and `*.yaml`, using two-space YAML indentation
 - A job-level `with:` at four spaces with `runner-image:` at six spaces, using
   either that same expression or a complete `ubuntu-NN.NN` label. Literal labels
   may be unquoted, single-quoted, or double-quoted. Earlier inputs may have
-  quoted keys or deeper-indented multiline bodies.
+  quoted keys or deeper-indented multiline bodies. Quoted scalar continuations
+  must have at least seven leading spaces through the closing quote. If an
+  earlier quoted scalar continues at six spaces or fewer, extraction skips that
+  `with:` block, including any real runner override after it. This conservative
+  rule applies even when a YAML parser accepts the shallower continuation.
 
 Both forms allow trailing YAML comments. Fallback expressions and literal input
 overrides exclude commented-out keys, scripts, unrelated strings, `env` values,
 and suffixed runner labels. Step-level inputs, quoted runner selection keys,
 quoted YAML expressions, other indentation styles, and reusable workflow input
-defaults are outside this custom extraction scope. Input defaults are maintained
-by lgtm-ci.
+defaults are outside this custom extraction scope. Earlier inputs with flow
+collections, anchors, tags, or sequences at the key's indentation are also
+unsupported and can prevent extraction. Input defaults are maintained by lgtm-ci.
 
 Both custom managers use the built-in `github-runners` datasource and dependency
 name `ubuntu`, so they update alongside literal `runs-on: ubuntu-*` labels in

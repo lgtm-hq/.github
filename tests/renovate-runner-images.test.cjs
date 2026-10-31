@@ -1,4 +1,5 @@
 const assert = require("node:assert/strict");
+const { spawnSync } = require("node:child_process");
 const { readFileSync } = require("node:fs");
 const { test } = require("node:test");
 
@@ -93,6 +94,63 @@ function jobName(part) {
   return /^ {2}([a-z][a-z0-9-]*):/.exec(part)?.[1];
 }
 
+function runnerValue(expression, version) {
+  return expression ? `\${{ vars.LGTM_CI_RUNNER || 'ubuntu-${version}' }}` : `ubuntu-${version}`;
+}
+
+// Keep parser-disputed YAML as text here: formatters must not normalize the
+// six-space continuation into a supported shape. PyYAML 6.0.3 accepts it as
+// scalar content; yaml 2.9.1 reports MISSING_CHAR / MULTILINE_IMPLICIT_KEY.
+function quotedInput({ expression, quote, indent, actual, prefix = "" }) {
+  const escape = (value) => (quote === "'" ? value.replaceAll("'", "''") : value);
+  const fake = escape(runnerValue(expression, "24.04"));
+  return [
+    "jobs:",
+    "  a:",
+    "    with:",
+    `      script: ${prefix}${quote}hello`,
+    `${" ".repeat(indent)}runner-image: ${fake}`,
+    `${" ".repeat(indent)}end${quote}`,
+    ...(actual ? [`      runner-image: ${runnerValue(expression, "26.04")}`] : []),
+    "",
+  ].join("\n");
+}
+
+test("JS fallback bounds failed with-block searches without blocking the test runner", () => {
+  // A timeout in node:test cannot interrupt a synchronous regex. Run the actual
+  // configured intermediate patterns in a child that the parent can kill.
+  const probe = `
+    const { readFileSync } = require('node:fs');
+    const patterns = JSON.parse(readFileSync(0, 'utf8'));
+    const results = [];
+    for (const pattern of patterns) {
+      for (const ending of ['\\n', '\\r\\n']) {
+        for (const count of [24, 48, 256]) {
+          const lines = [
+            'jobs:', '  a:', '    with:', '      script: |',
+            ...Array(count).fill("        # runner-image: \${{ vars.LGTM_CI_RUNNER || 'ubuntu-24.04' }}"),
+            ...Array(count).fill('        '),
+            '      runner-image: ubuntu-24.04-custom',
+            "      runner-image: \${{ vars.LGTM_CI_RUNNER || 'ubuntu-24.04' }}-custom",
+            '',
+          ];
+          results.push(new RegExp(pattern, 'g').test(lines.join(ending)));
+        }
+      }
+    }
+    process.stdout.write(JSON.stringify(results));
+  `;
+  const child = spawnSync(process.execPath, ["-e", probe], {
+    input: JSON.stringify(managers.map((manager) => manager.matchStrings[1])),
+    encoding: "utf8",
+    timeout: 3000,
+    killSignal: "SIGKILL",
+  });
+  assert.ifError(child.error);
+  assert.equal(child.status, 0, child.stderr);
+  assert.deepEqual(JSON.parse(child.stdout), Array(12).fill(false));
+});
+
 test("runner managers retain recursive scoping and the built-in runner group", () => {
   assert.equal(managers.length, 2, "Expected two Ubuntu runner custom managers");
   for (const manager of managers) {
@@ -143,6 +201,96 @@ for (const [ending, content] of [
   ["CRLF", workflow.replaceAll("\n", "\r\n")],
   ["no final newline", workflow.trimEnd()],
 ]) {
+  const lineEndings = (input) => {
+    if (ending === "CRLF") return input.replaceAll("\n", "\r\n");
+    return ending === "no final newline" ? input.trimEnd() : input;
+  };
+
+  test(`skip unsupported quoted continuations and preserve their text (${ending})`, () => {
+    for (const expression of [false, true]) {
+      for (const quote of ['"', "'"]) {
+        for (const indent of [0, 4, 6]) {
+          for (const actual of [false, true]) {
+            const input = lineEndings(quotedInput({ expression, quote, indent, actual }));
+            assert.deepEqual(
+              managers.flatMap((manager) => extract(input, manager)),
+              [],
+              JSON.stringify({ expression, quote, indent, actual }),
+            );
+            // A column-zero continuation also ends the supported jobs region.
+            if (indent === 0) continue;
+            // Also exercise Renovate's replacement collision behavior: an
+            // identical real selection in a later job may update, while every
+            // byte of the unsupported block (including its override) survives.
+            const target = `\n  target:\n    with:\n      runner-image: ${runnerValue(expression, "24.04")}\n`;
+            const collision = `${input}${lineEndings(target)}`;
+            const result = update(collision, managers[expression ? 0 : 1], 0, "30.04");
+            assert.equal(
+              result.content,
+              `${input}${lineEndings(target.replaceAll("24.04", "30.04"))}`,
+            );
+          }
+        }
+      }
+    }
+    for (const prefix of ["&script ", "!!str ", "[", "{script: "]) {
+      const input = lineEndings(
+        quotedInput({ expression: false, quote: '"', indent: 6, actual: true, prefix }),
+      );
+      assert.deepEqual(
+        managers.flatMap((manager) => extract(input, manager)),
+        [],
+        prefix,
+      );
+    }
+  });
+
+  test(`track real overrides after supported quoted scalars (${ending})`, () => {
+    for (const expression of [false, true]) {
+      for (const quote of ['"', "'"]) {
+        for (const indent of [7, 8]) {
+          const input = lineEndings(quotedInput({ expression, quote, indent, actual: true }));
+          const manager = managers[expression ? 0 : 1];
+          assert.deepEqual(extract(input, manager).map(identity), [
+            ["ubuntu", "github-runners", "26.04"],
+          ]);
+          assert.equal(
+            update(input, manager, 0, "30.04").content,
+            input.replace("ubuntu-26.04", "ubuntu-30.04"),
+          );
+        }
+      }
+    }
+  });
+
+  test(`preserve deep comments and blank lines before real overrides (${ending})`, () => {
+    for (const expression of [false, true]) {
+      const input = lineEndings(
+        [
+          "jobs:",
+          "  a:",
+          "    with:",
+          "# column-zero comment",
+          "  # shallow comment",
+          "      # input comment",
+          "      script: |",
+          "       # seven spaces",
+          "        # deep comment",
+          "        ",
+          "       ",
+          "",
+          "      ",
+          `      runner-image: ${runnerValue(expression, "26.04")}`,
+          "",
+        ].join("\n"),
+      );
+      const manager = managers[expression ? 0 : 1];
+      assert.deepEqual(extract(input, manager).map(identity), [
+        ["ubuntu", "github-runners", "26.04"],
+      ]);
+    }
+  });
+
   test(`extract only complete Ubuntu selections (${ending})`, () => {
     const dependencies = managers.flatMap((manager) => extract(content, manager));
     assert.deepEqual(dependencies.map(identity), expected);
