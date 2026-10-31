@@ -46,6 +46,25 @@ See [GitHub's documentation on default community health files][docs] for details
 [docs]: https://docs.github.com/en/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file
 <!-- markdownlint-enable MD013 -->
 
+### Shared runner expression
+
+Consumer-owned jobs can use the organization runner variable with a pinned
+fallback:
+
+```yaml
+runs-on: ${{ vars.LGTM_CI_RUNNER || 'ubuntu-26.04' }}
+```
+
+`LGTM_CI_RUNNER` currently selects `ubuntu-26.04` and is visible only to
+`agent-infra`; other repositories use the literal fallback. The Blacksmith
+runner label, when selected, is `blacksmith-2vcpu-ubuntu-2604`.
+
+The shared preset tracks the Ubuntu fallback in this expression and explicit
+`with: runner-image: ubuntu-*` values in `.github/workflows/*.yml` and
+`*.yaml`. Both use the `github-runners` datasource and dependency name `ubuntu`,
+so they update alongside literal `runs-on: ubuntu-*` labels in the same runner
+image PR. Reusable workflow input defaults are maintained by lgtm-ci.
+
 ## GitHub Actions SHA Pinning + Renovate
 
 LGTM HQ policy: pin GitHub Actions to **full commit SHAs only** — not

@@ -429,6 +429,19 @@
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lgtm-hq/lgtm-ci",
       "autoReplaceStringTemplate": "ref: \"{{newDigest}}\" # {{newVersion}}"
+    },
+    {
+      "description": "Track shared runner expression fallbacks and runner-image overrides (not visible to github-actions manager)",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/.*\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "vars\\.LGTM_CI_RUNNER\\s*\\|\\|\\s*'ubuntu-(?<currentValue>\\d+\\.\\d+)'",
+        "runner-image:\\s*['\"]?ubuntu-(?<currentValue>\\d+\\.\\d+)['\"]?"
+      ],
+      "datasourceTemplate": "github-runners",
+      "depNameTemplate": "ubuntu"
     }
   ]
 }
